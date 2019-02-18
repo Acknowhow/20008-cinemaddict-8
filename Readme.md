@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Вадим Корабельник](https://up.htmlacademy.ru/ecmascript/8/user/20008).
-* Наставник: `Неизвестно`.
+* Наставник: [Андрей Фидельман](https://htmlacademy.ru/profile/id773165).
 
 ---
 
