@@ -1,5 +1,3 @@
-let randomNumber;
-
 const getRandomIntInclusive = (min, max) => {
   const minCeil = Math.ceil(min);
   const maxFloor = Math.floor(max);
@@ -8,6 +6,7 @@ const getRandomIntInclusive = (min, max) => {
 };
 
 export const insert = (cards, container) => {
+  let randomNumber;
   randomNumber = getRandomIntInclusive(0, cards.length - 1);
   container.innerHTML = ``;
 

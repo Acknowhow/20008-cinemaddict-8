@@ -1,7 +1,7 @@
 export const filters = [
   {
     name: `All movies`,
-    amount: false,
+    amount: null,
     state: `active`
   },
 
@@ -25,7 +25,7 @@ export const filters = [
 
   {
     name: `stats`,
-    amount: false,
+    amount: null,
     state: `additional`
   },
 ];
