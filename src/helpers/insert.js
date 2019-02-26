@@ -16,4 +16,5 @@ export const insert = (cards, container) => {
     container.insertAdjacentHTML(`beforeend`, cards[randomNumber]);
     randomNumber--;
   }
-}
+};
+
