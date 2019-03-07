@@ -1,20 +1,8 @@
-const getRandomIntInclusive = (min, max) => {
+export const getRandomIntInclusive = (min, max) => {
   const minCeil = Math.ceil(min);
   const maxFloor = Math.floor(max);
 
   return Math.floor(Math.random() * (maxFloor - minCeil + 1)) + minCeil;
-};
-
-export const insert = (cards, container) => {
-  let randomNumber;
-  randomNumber = getRandomIntInclusive(0, cards.length - 1);
-  container.innerHTML = ``;
-
-  while (randomNumber >= 0) {
-
-    container.insertAdjacentHTML(`beforeend`, cards[randomNumber]);
-    randomNumber--;
-  }
 };
 
 export const getRandomArrayElement = (array) => {
@@ -22,16 +10,19 @@ export const getRandomArrayElement = (array) => {
 };
 
 export const generateRandomText = (array) => {
-  const randomIndex = getRandomIntInclusive(0, array.length - 1)
-  const randomDeleteCount = getRandomIntInclusive(1, 3)
+  const clonedArray = [...array];
 
-  return array.splice(randomIndex, randomDeleteCount)
+  const randomIndex = getRandomIntInclusive(0, clonedArray.length - 1);
+  const randomDeleteCount = getRandomIntInclusive(1, 3);
+
+  return clonedArray.splice(randomIndex, randomDeleteCount).join(``);
 }
 
 export const getAverageRating = (array) => {
+  const clonedArray = [...array];
 
-  const sum = array.reduce((acc, index) => acc + index)
-  return (sum / array.length).toFixed(1);
+  const sum = clonedArray.reduce((acc, index) => acc + index);
+  return (sum / clonedArray.length).toFixed(1);
 }
 
 export const getHoursMinutes = (seconds) => {

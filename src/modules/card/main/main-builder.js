@@ -1,4 +1,4 @@
-import concreteMain from './main-builder';
+import concreteMain from './main-concreter';
 import {
   getImagePath,
   getRandomArrayElement,

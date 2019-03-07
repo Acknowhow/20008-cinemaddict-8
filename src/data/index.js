@@ -46,7 +46,7 @@ const genres = [
 const images = [
   `accused.jpg`, `blackmail.jpg`, `blue-blazes.jpg`,
   `fuga-da-new-york.jpg`, `moonrise.jpg`, `three-friends.jpg`
-]
+];
 
 // set
 const audiences = [
@@ -71,7 +71,7 @@ const ratings = [
 const countries = [
   `Russia`, `Lithuania`, `US`, `Canada`,
   `India`, `New Zealand`, `Australia`
-]
+];
 
 
 export const card = {
