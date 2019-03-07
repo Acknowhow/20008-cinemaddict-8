@@ -1,4 +1,4 @@
-import {filters} from './../../data/data';
+import {filters} from './../../data';
 import concreteFilter from './../../modules/filter/filter-concreter';
 
 const nav = document.querySelector(`.main-navigation`);
