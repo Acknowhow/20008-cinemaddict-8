@@ -1,7 +1,6 @@
-import {cards} from '../../data/data';
-import {selectedCards} from '../../data/data';
+import {cards, selectedCards} from '../../data';
 
-import {insert} from '../../helpers/insert';
+import {insert} from '../../assets/handler';
 
 const cardsContainer = document.querySelector(
     `.films-list__container--main`);

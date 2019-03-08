@@ -1,7 +1,5 @@
-import buildFilter from './modules/filter/filter-builder';
-import buildCard from './modules/card/card-builder';
+import initApp from './modules/app-init';
 
-buildFilter();
-buildCard();
+initApp();
 
 
