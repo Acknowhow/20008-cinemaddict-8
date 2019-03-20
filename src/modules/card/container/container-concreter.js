@@ -60,7 +60,6 @@ export default class Container {
 
   unrender() {
     this.unbind();
-
     this._element = null;
   }
 }

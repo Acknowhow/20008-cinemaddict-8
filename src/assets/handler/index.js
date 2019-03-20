@@ -9,13 +9,13 @@ export const getRandomArrayElement = (array) => {
   return array[getRandomIntInclusive(0, array.length - 1)];
 };
 
-export const generateRandomText = (array) => {
+export const generateRandomText = (array, delimeter) => {
   const clonedArray = [...array];
 
   const randomIndex = getRandomIntInclusive(0, clonedArray.length - 1);
   const randomDeleteCount = getRandomIntInclusive(1, 3);
 
-  return clonedArray.splice(randomIndex, randomDeleteCount).join(``);
+  return clonedArray.splice(randomIndex, randomDeleteCount).join(delimeter);
 };
 
 export const getAverageRating = (array) => {

@@ -1,9 +1,31 @@
 export default class Popup {
-  constructor(audience, title, averageRating) {
+  constructor(audience, title, averageRating, actors, description) {
     this.audience = audience;
     this.title = title;
     this.averageRating = averageRating;
+    this.actors = actors;
+    this.description = description;
 
+    this._element = null;
+    this._onClose = null;
+
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+  }
+
+  _onCloseButtonClick(e) {
+    e.preventDefault();
+
+    if (typeof this._onClose === `function`) {
+      this._onClose();
+    }
+  }
+
+  set onClose(fn) {
+    this._onClose = fn;
+  }
+
+  get element() {
+    return this._element;
   }
 
   get template() {
@@ -44,7 +66,7 @@ export default class Popup {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Actors</td>
-                  <td class="film-details__cell">Samuel L. Jackson, Catherine Keener, Sophia Bush</td>
+                  <td class="film-details__cell">${this.actors}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
@@ -67,10 +89,7 @@ export default class Popup {
                 </tr>
               </table>
       
-              <p class="film-details__film-description">
-                The Incredibles hero family takes on a new mission, which involves a change in family roles:
-                Bob Parr (Mr Incredible) must manage the house while his wife Helen (Elastigirl) goes out to save the world.
-              </p>
+              <p class="film-details__film-description">${this.description}</p>
             </div>
           </div>
       
@@ -173,5 +192,29 @@ export default class Popup {
           </section>
         </form>
       </section>`;
+  }
+
+  bind() {
+    this._element.querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, this._onCloseButtonClick);
+  }
+
+  render() {
+    const elementContainer = document.createElement(`div`);
+    elementContainer.insertAdjacentHTML(`beforeend`, this.template);
+
+    this._element = elementContainer.querySelector(`.film-details`);
+    this.bind();
+    return this._element;
+  }
+
+  unbind() {
+    this._element.querySelector(`.film-details__close-btn`)
+      .removeEventListener(`click`, this._onCloseButtonClick);
+  }
+
+  unrender() {
+    this.unbind();
+    this._element = null;
   }
 }
