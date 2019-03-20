@@ -1,9 +1,6 @@
-import concreteContainer from './container-concreter';
+import ConcreteContainer from './container-concreter';
+export default (card) => {
+  const {ratings} = card;
 
-export default (cardsContainer, numValue) => {
-  const containerMarkup = concreteContainer(numValue);
-
-  cardsContainer.insertAdjacentHTML(`beforeend`, containerMarkup);
-
-  return cardsContainer.querySelector(`.film-card--${numValue}`)
-}
+  return new ConcreteContainer(ratings);
+};

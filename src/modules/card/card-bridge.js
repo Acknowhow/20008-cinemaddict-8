@@ -1,72 +1,47 @@
 import {card, filters} from '../../data';
-import {getRandomIntInclusive} from '../../assets/handler';
 
 import buildContainer from './container/container-builder';
-import buildIntro from './intro/intro-builder';
 import buildMain from './main/main-builder';
-import buildControl from './control/control-builder';
+import buildPopup from './popup/popup-builder';
 
 import buildFilter from './../filter/filter-builder';
 
-const {
-  titles, ratings, releaseTimestamps,
-  durations, genres, images, descriptions
-} = card;
+const body = document.querySelector(`body`);
 
-const cardsContainer = document.querySelector(
-  `.films-list__container--main`);
+const cardsContainer = body.querySelector(
+    `.films-list__container--main`);
 
-const cardsContainerRated = document.querySelector(
-  `.films-list__container--rated`);
-
-const cardsContainerCommented = document.querySelector(
-  `.films-list__container--commented`);
-
-const filtersContainer = document.querySelector(
-  `.main-navigation`)
+const filtersContainer = body.querySelector(
+  `.main-navigation`);
 
 export default () => {
   buildFilter(filters, filtersContainer);
 
   filtersContainer.addEventListener(`click`, (e) => {
-
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
-      let randomNumber;
-      let cardsNumber = 6;
 
-      randomNumber = getRandomIntInclusive(0, cardsNumber);
-      cardsContainer.innerHTML = ``;
+      const container = buildContainer(card);
+      const popup = buildPopup(card);
 
-      while (randomNumber >= 0) {
-        const cardContainer = buildContainer(cardsContainer, randomNumber);
+      const getContainer = () => cardsContainer.appendChild(container.render());
 
-        buildIntro(cardContainer, titles, ratings,
-          releaseTimestamps, durations, genres);
+      buildMain(card, getContainer());
 
-        buildMain(cardContainer, images, descriptions);
-        buildControl(cardContainer);
+      container.onComments = () => {
+        popup.render();
 
-        randomNumber--;
+        body.appendChild(popup.element);
+        container.unbind();
       }
 
-      const cardContainerRated = buildContainer(cardsContainerRated, 0);
+      popup.onClose = () => {
+        container.bind();
 
-      buildIntro(cardContainerRated, titles, ratings,
-        releaseTimestamps, durations, genres);
-      buildMain(cardContainerRated, images, descriptions);
-      buildControl(cardContainerRated);
-
-      const cardContainerCommented = buildContainer(cardsContainerCommented, 0);
-
-      buildIntro(cardContainerCommented, titles, ratings,
-        releaseTimestamps, durations, genres);
-      buildMain(cardContainerCommented, images, descriptions);
-      buildControl(cardContainerCommented);
-
+        body.removeChild(popup.element);
+        popup.unrender();
+      }
     }
   });
-
-
-}
+};

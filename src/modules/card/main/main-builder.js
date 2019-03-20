@@ -3,12 +3,27 @@ import {
   getImagePath,
   getRandomArrayElement,
   generateRandomText,
-  insertTemplate} from '../../../assets/handler';
+  getAverageRating,
+  getYear, getHoursMinutes
+} from '../../../assets/handler';
 
-export default (container, images, descriptions) => {
- const imagePath = getImagePath(getRandomArrayElement(images));
- const description = generateRandomText(descriptions);
+export default (card, container) => {
+  const {
+    titles, ratings, releaseTimestamps,
+    durations, genres, images, descriptions
+  } = card;
 
- const markup = concreteMain(imagePath, description);
- insertTemplate(container, markup);
+  const title = getRandomArrayElement(titles);
+  const averageRating = getAverageRating(ratings);
+  const releaseYear = getYear(getRandomArrayElement(releaseTimestamps));
+  const duration = getHoursMinutes(getRandomArrayElement(durations));
+  const genre = getRandomArrayElement(genres);
+  const imagePath = getImagePath(getRandomArrayElement(images));
+  const description = generateRandomText(descriptions, ``);
+
+  const markup = concreteMain(
+      title, averageRating, releaseYear,
+      duration, genre, imagePath, description);
+
+  container.insertAdjacentHTML(`afterbegin`, markup);
 };

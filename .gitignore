@@ -10,6 +10,5 @@ Thumbs.db
 # Вспомогательные файлы
 *.log*
 node_modules/
+materials/
 
-# Папка с собранными файлами проекта
-public/
