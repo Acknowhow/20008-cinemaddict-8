@@ -1,4 +1,4 @@
-export default (numValue) => {
+export default () => {
   return `
-<article class="film-card film-card--${numValue}"></article>`
+<article class="film-card film-card"></article>`
 }

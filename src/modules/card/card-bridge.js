@@ -33,38 +33,16 @@ export default () => {
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
-      let randomNumber;
-      let cardsNumber = 6;
 
-      randomNumber = getRandomIntInclusive(0, cardsNumber);
       cardsContainer.innerHTML = ``;
 
-      while (randomNumber >= 0) {
-        const cardContainer = buildContainer(cardsContainer, randomNumber);
+      const cardContainer = buildContainer(cardsContainer);
 
-        buildIntro(cardContainer, titles, ratings,
-          releaseTimestamps, durations, genres);
-
-        buildMain(cardContainer, images, descriptions);
-        buildControl(cardContainer);
-
-        randomNumber--;
-      }
-
-      const cardContainerRated = buildContainer(cardsContainerRated, 0);
-
-      buildIntro(cardContainerRated, titles, ratings,
+      buildIntro(cardContainer, titles, ratings,
         releaseTimestamps, durations, genres);
-      buildMain(cardContainerRated, images, descriptions);
-      buildControl(cardContainerRated);
 
-      const cardContainerCommented = buildContainer(cardsContainerCommented, 0);
-
-      buildIntro(cardContainerCommented, titles, ratings,
-        releaseTimestamps, durations, genres);
-      buildMain(cardContainerCommented, images, descriptions);
-      buildControl(cardContainerCommented);
-
+      buildMain(cardContainer, images, descriptions);
+      buildControl(cardContainer);
     }
   });
 
