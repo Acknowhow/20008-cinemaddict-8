@@ -1,16 +1,9 @@
 import {card, filters} from '../../data';
 
-import buildContainer from './container/container-builder';
-import buildIntro from './intro/intro-builder';
+import ConcreteContainer from './container/container-concreter';
 import buildMain from './main/main-builder';
-import buildControl from './control/control-builder';
 
 import buildFilter from './../filter/filter-builder';
-
-const {
-  titles, ratings, releaseTimestamps,
-  durations, genres, images, descriptions
-} = card;
 
 const cardsContainer = document.querySelector(
     `.films-list__container--main`);
@@ -22,20 +15,17 @@ export default () => {
   buildFilter(filters, filtersContainer);
 
   filtersContainer.addEventListener(`click`, (e) => {
-
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      const {ratings} = card;
 
-      cardsContainer.innerHTML = ``;
+      const container = new ConcreteContainer(ratings);
 
-      const cardContainer = buildContainer(cardsContainer);
+      const getContainer = () => cardsContainer.appendChild(container.render());
 
-      buildIntro(cardContainer, titles, ratings,
-        releaseTimestamps, durations, genres);
+      buildMain(card, getContainer());
 
-      buildMain(cardContainer, images, descriptions);
-      buildControl(cardContainer);
     }
   });
 };
