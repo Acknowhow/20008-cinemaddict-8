@@ -1,5 +1,4 @@
 import {card, filters} from '../../data';
-import {getRandomIntInclusive} from '../../assets/handler';
 
 import buildContainer from './container/container-builder';
 import buildIntro from './intro/intro-builder';
@@ -14,16 +13,10 @@ const {
 } = card;
 
 const cardsContainer = document.querySelector(
-  `.films-list__container--main`);
-
-const cardsContainerRated = document.querySelector(
-  `.films-list__container--rated`);
-
-const cardsContainerCommented = document.querySelector(
-  `.films-list__container--commented`);
+    `.films-list__container--main`);
 
 const filtersContainer = document.querySelector(
-  `.main-navigation`)
+  `.main-navigation`);
 
 export default () => {
   buildFilter(filters, filtersContainer);
@@ -45,6 +38,4 @@ export default () => {
       buildControl(cardContainer);
     }
   });
-
-
-}
+};
