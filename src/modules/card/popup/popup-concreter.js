@@ -1,12 +1,14 @@
-export default class Popup {
+import Component from '../../../assets/concreter';
+
+export default class Popup extends Component {
   constructor(audience, title, averageRating, actors, description) {
+    super();
     this.audience = audience;
     this.title = title;
     this.averageRating = averageRating;
     this.actors = actors;
     this.description = description;
 
-    this._element = null;
     this._onClose = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
@@ -22,10 +24,6 @@ export default class Popup {
 
   set onClose(fn) {
     this._onClose = fn;
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -199,22 +197,8 @@ export default class Popup {
       .addEventListener(`click`, this._onCloseButtonClick);
   }
 
-  render() {
-    const elementContainer = document.createElement(`div`);
-    elementContainer.insertAdjacentHTML(`beforeend`, this.template);
-
-    this._element = elementContainer.querySelector(`.film-details`);
-    this.bind();
-    return this._element;
-  }
-
   unbind() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseButtonClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }
