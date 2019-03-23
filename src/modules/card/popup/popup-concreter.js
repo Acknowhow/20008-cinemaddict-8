@@ -10,7 +10,6 @@ export default class Popup extends Component {
     this.description = description;
 
     this._onClose = null;
-
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
   }
 
