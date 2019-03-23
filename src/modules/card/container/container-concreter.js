@@ -1,8 +1,9 @@
-export default class Container {
-  constructor(ratings) {
-    this.ratings = ratings;
+import Component from '../../../assets/concreter';
 
-    this._element = null;
+export default class Container extends Component {
+  constructor(ratings) {
+    super();
+    this.ratings = ratings;
     this._onComments = null;
 
     this._onCommentsButtonClick = this._onCommentsButtonClick.bind(this);
@@ -15,10 +16,6 @@ export default class Container {
     if (typeof this._onComments === `function`) {
       this._onComments();
     }
-  }
-
-  get element() {
-    return this._element;
   }
 
   set onComments(fn) {
@@ -44,22 +41,8 @@ export default class Container {
 
   }
 
-  render() {
-    const elementContainer = document.createElement(`div`);
-    elementContainer.insertAdjacentHTML(`beforeend`, this.template);
-
-    this._element = elementContainer.querySelector(`.film-card`);
-    this.bind();
-    return this._element;
-  }
-
   unbind() {
     this._element.querySelector(`.film-card__comments`)
       .removeEventListener(`click`, this._onCommentsButtonClick);
-  }
-
-  unrender() {
-    this.unbind();
-    this._element = null;
   }
 }
