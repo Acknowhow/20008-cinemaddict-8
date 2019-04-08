@@ -64,8 +64,9 @@ const digitalReleaseTimestamps = [
 
 // array
 const ratings = [
-  5, 7, 10, 9, 10, 8, 7, 4
+  1, 2, 3, 4, 5, 6, 7, 8, 9
 ];
+
 
 // set
 const countries = [
@@ -73,6 +74,11 @@ const countries = [
   `India`, `New Zealand`, `Australia`
 ];
 
+const Comments = {
+  [`sleeping`]: `😴`,
+  [`neutral-face`]: `😐`,
+  [`grinning`]: `😀`
+};
 
 export const card = {
   titles,
@@ -84,6 +90,7 @@ export const card = {
   episodes,
   genres,
   images,
+  comments: Comments,
   audiences,
   premiereTimestamps,
   digitalReleaseTimestamps,
@@ -93,6 +100,8 @@ export const card = {
   isWatched: false,
   willWatch: true
 };
+
+
 
 
 export const filters = [

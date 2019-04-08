@@ -1,18 +1,24 @@
 import {card, filters} from '../../data';
 
-import buildContainer from './container/container-builder';
-import buildMain from './main/main-builder';
-import buildPopup from './popup/popup-builder';
+import CardContainer from './container/container-concreter';
+import PopupContainer from './../popup/container/container-concreter';
 
+import buildMain from './main/main-builder';
 import buildFilter from './../filter/filter-builder';
 
-const body = document.querySelector(`body`);
+import buildInfo from './../popup/info/info-builder';
+import buildComment from './../popup/comment/comment-builder';
+import buildRating from './../popup/rating/rating-builder.js';
 
+import {getRandomArrayElement} from '../../assets/handler';
+import {manufacture} from "../../assets/factory";
+
+const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
 
 const filtersContainer = body.querySelector(
-  `.main-navigation`);
+    `.main-navigation`);
 
 export default () => {
   buildFilter(filters, filtersContainer);
@@ -21,27 +27,37 @@ export default () => {
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      const {ratings, titles, images} = card;
 
-      const container = buildContainer(card);
-      const popup = buildPopup(card);
+      const src = getRandomArrayElement(images);
+      const title = getRandomArrayElement(titles);
 
-      const getContainer = () => cardsContainer.appendChild(container.render());
+      const cardContainer = new CardContainer(ratings);
+      const popupContainer = new PopupContainer(src, title);
 
-      buildMain(card, getContainer());
+      const popupBuilders = [
+        buildInfo, buildComment, buildRating
+      ];
 
-      container.onComments = () => {
-        popup.render();
+      cardsContainer.appendChild(cardContainer.render());
 
-        body.appendChild(popup.element);
-        container.unbind();
-      }
+      buildMain(card, cardContainer.element);
 
-      popup.onClose = () => {
-        container.bind();
+      cardContainer.onComments = () => {
+        popupContainer.render();
 
-        body.removeChild(popup.element);
-        popup.unrender();
-      }
+        manufacture(card, popupContainer.element, ...popupBuilders);
+
+        body.appendChild(popupContainer.element);
+        cardContainer.unbind();
+      };
+
+      popupContainer.onClose = () => {
+        cardContainer.bind();
+
+        body.removeChild(popupContainer.element);
+        popupContainer.unrender();
+      };
     }
   });
 };

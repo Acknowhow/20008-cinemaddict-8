@@ -1,16 +1,16 @@
-import ConcretePopup from './popup-concreter';
-
+import Info from './info-concreter';
 import {
   generateRandomText,
   getAverageRating,
-  getRandomArrayElement
-} from '../../../assets/handler';
+  getRandomArrayElement} from '../../../assets/handler';
 
-export default (card) => {
+export default (card, container) => {
   const {
     audiences, titles, ratings,
     actors, descriptions
   } = card;
+
+  const infoContainer = container.querySelector(`.film-details__info-wrap`);
 
   const audience = getRandomArrayElement(audiences);
   const title = getRandomArrayElement(titles);
@@ -18,5 +18,8 @@ export default (card) => {
   const randomActors = generateRandomText(actors, ` `);
   const description = generateRandomText(descriptions);
 
-  return new ConcretePopup(audience, title, averageRating, randomActors, description);
-};
+  const info = new Info(audience, title, averageRating, randomActors, description);
+  infoContainer.appendChild(info.render());
+
+  return info;
+}
