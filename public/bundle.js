@@ -141,12 +141,13 @@ class Component {
 /*!*************************************!*\
   !*** ./src/assets/factory/index.js ***!
   \*************************************/
-/*! exports provided: manufacture, createElement */
+/*! exports provided: manufacture, update, createElement */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "manufacture", function() { return manufacture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createElement", function() { return createElement; });
 const manufacture = (data, container, ...callbacks) => {
   const callBacksArray = [];
@@ -158,6 +159,16 @@ const manufacture = (data, container, ...callbacks) => {
   }
 
   return callBacksArray;
+};
+
+const update = (data, ...callbacks) => {
+  while (callbacks.length) {
+    const callback = callbacks.shift();
+
+    if (callback[update]) {
+      callback.update(data);
+    }
+  }
 };
 
 const createElement = (template) => {
@@ -237,11 +248,12 @@ const getImagePath = (image) => {
 /*!***************************!*\
   !*** ./src/data/index.js ***!
   \***************************/
-/*! exports provided: card, filters */
+/*! exports provided: Comments, card, filters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Comments", function() { return Comments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "card", function() { return card; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filters", function() { return filters; });
 const titles = [
@@ -336,11 +348,12 @@ const card = {
   episodes,
   genres,
   images,
-  comments: Comments,
+  comment: ``,
   audiences,
   premiereTimestamps,
   digitalReleaseTimestamps,
   ratings,
+  rating: ``,
   countries,
   isFavorite: true,
   isWatched: false,
@@ -471,6 +484,8 @@ const filtersContainer = body.querySelector(
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      let producedPopupBuilders = [];
+
       const {ratings, titles, images} = _data__WEBPACK_IMPORTED_MODULE_0__["card"];
 
       const src = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_8__["getRandomArrayElement"])(images);
@@ -478,6 +493,18 @@ const filtersContainer = body.querySelector(
 
       const cardContainer = new _container_container_concreter__WEBPACK_IMPORTED_MODULE_1__["default"](ratings);
       const popupContainer = new _popup_container_container_concreter__WEBPACK_IMPORTED_MODULE_2__["default"](src, title);
+
+      const formSubmission = (evt) => {
+        evt.preventDefault();
+
+        if (evt.ctrlKey === true && evt.keyCode === 13) {
+
+          popupContainer.onSubmit = (newData) => {
+            _data__WEBPACK_IMPORTED_MODULE_0__["card"].comment = newData.comment;
+            _data__WEBPACK_IMPORTED_MODULE_0__["card"].rating = newData.rating;
+          }
+        }
+      };
 
       const popupBuilders = [
         _popup_info_info_builder__WEBPACK_IMPORTED_MODULE_5__["default"], _popup_comment_comment_builder__WEBPACK_IMPORTED_MODULE_6__["default"], _popup_rating_rating_builder_js__WEBPACK_IMPORTED_MODULE_7__["default"]
@@ -490,15 +517,18 @@ const filtersContainer = body.querySelector(
       cardContainer.onComments = () => {
         popupContainer.render();
 
-        Object(_assets_factory__WEBPACK_IMPORTED_MODULE_9__["manufacture"])(_data__WEBPACK_IMPORTED_MODULE_0__["card"], popupContainer.element, ...popupBuilders);
+        producedPopupBuilders = Object(_assets_factory__WEBPACK_IMPORTED_MODULE_9__["manufacture"])(
+          _data__WEBPACK_IMPORTED_MODULE_0__["card"], popupContainer.element, ...popupBuilders);
 
         body.appendChild(popupContainer.element);
+        body.addEventListener('keydown', formSubmission);
         cardContainer.unbind();
       };
 
       popupContainer.onClose = () => {
         cardContainer.bind();
 
+        body.removeEventListener('keydown', formSubmission);
         body.removeChild(popupContainer.element);
         popupContainer.unrender();
       };
@@ -592,7 +622,6 @@ __webpack_require__.r(__webpack_exports__);
     durations, genres, images, descriptions
   } = card;
 
-  console.log(container)
 
   const title = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(titles);
   const averageRating = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getAverageRating"])(ratings);
@@ -727,19 +756,19 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Comment; });
 /* harmony import */ var _assets_concreter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../assets/concreter */ "./src/assets/concreter/index.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../data */ "./src/data/index.js");
+
 
 
 class Comment extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(comments) {
+  constructor() {
     super();
-
-    this._comments = comments;
   }
 
   _getComments() {
     const array = [];
 
-    for (const [key, value] of Object.entries(this._comments)) {
+    for (const [key, value] of Object.entries(_data__WEBPACK_IMPORTED_MODULE_1__["Comments"])) {
       array.push(`
         <input 
           class="film-details__emoji-item visually-hidden" 
@@ -819,7 +848,34 @@ class Container extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"
     this._title = title;
 
     this._onClose = null;
+    this._onSubmit = null;
+
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+
+  }
+
+  _processForm(formData) {
+    const entry = {
+      rating: null,
+      comments: {
+        [`sleeping`]: ``,
+        [`neutral-face`]: ``,
+        [`grinning`]: ``
+      }
+    };
+
+    const ContainerMapper = Container.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+
+      const [property, value] = pair;
+      if (ContainerMapper[property]) {
+
+        ContainerMapper[property](value);
+      }
+    }
+
+    return entry;
   }
 
   _onCloseButtonClick(e) {
@@ -830,8 +886,25 @@ class Container extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"
     }
   }
 
+  _onSubmitAction() {
+
+    const formData = new FormData(
+      this._element.querySelector(`.film-details__inner`));
+
+    const newData = this._processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+  }
+
   set onClose(fn) {
     this._onClose = fn;
+  }
+
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+    this._onSubmitAction();
   }
 
   get template() {
@@ -902,6 +975,13 @@ class Container extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"
   unbind() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseButtonClick);
+  }
+
+  static createMapper(target) {
+    return {
+      [`comment-emoji`]: (value) => target.comment = value,
+      score: (value) => target.score = value
+    }
   }
 }
 

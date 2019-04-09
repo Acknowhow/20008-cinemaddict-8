@@ -8,7 +8,34 @@ export default class Container extends Component {
     this._title = title;
 
     this._onClose = null;
+    this._onSubmit = null;
+
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+
+  }
+
+  _processForm(formData) {
+    const entry = {
+      rating: null,
+      comments: {
+        [`sleeping`]: ``,
+        [`neutral-face`]: ``,
+        [`grinning`]: ``
+      }
+    };
+
+    const ContainerMapper = Container.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+
+      const [property, value] = pair;
+      if (ContainerMapper[property]) {
+
+        ContainerMapper[property](value);
+      }
+    }
+
+    return entry;
   }
 
   _onCloseButtonClick(e) {
@@ -19,8 +46,25 @@ export default class Container extends Component {
     }
   }
 
+  _onSubmitAction() {
+
+    const formData = new FormData(
+      this._element.querySelector(`.film-details__inner`));
+
+    const newData = this._processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+  }
+
   set onClose(fn) {
     this._onClose = fn;
+  }
+
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+    this._onSubmitAction();
   }
 
   get template() {
@@ -91,5 +135,12 @@ export default class Container extends Component {
   unbind() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseButtonClick);
+  }
+
+  static createMapper(target) {
+    return {
+      [`comment-emoji`]: (value) => target.comment = value,
+      score: (value) => target.score = value
+    }
   }
 }

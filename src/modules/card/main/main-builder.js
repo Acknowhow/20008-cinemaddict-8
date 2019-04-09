@@ -13,7 +13,6 @@ export default (card, container) => {
     durations, genres, images, descriptions
   } = card;
 
-  console.log(container)
 
   const title = getRandomArrayElement(titles);
   const averageRating = getAverageRating(ratings);

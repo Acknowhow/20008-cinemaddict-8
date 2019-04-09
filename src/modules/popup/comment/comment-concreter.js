@@ -1,16 +1,15 @@
 import Component from '../../../assets/concreter';
+import {Comments} from '../../../data';
 
 export default class Comment extends Component {
-  constructor(comments) {
+  constructor() {
     super();
-
-    this._comments = comments;
   }
 
   _getComments() {
     const array = [];
 
-    for (const [key, value] of Object.entries(this._comments)) {
+    for (const [key, value] of Object.entries(Comments)) {
       array.push(`
         <input 
           class="film-details__emoji-item visually-hidden" 

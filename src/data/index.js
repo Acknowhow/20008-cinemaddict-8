@@ -74,7 +74,7 @@ const countries = [
   `India`, `New Zealand`, `Australia`
 ];
 
-const Comments = {
+export const Comments = {
   [`sleeping`]: `😴`,
   [`neutral-face`]: `😐`,
   [`grinning`]: `😀`
@@ -90,11 +90,12 @@ export const card = {
   episodes,
   genres,
   images,
-  comments: Comments,
+  comment: ``,
   audiences,
   premiereTimestamps,
   digitalReleaseTimestamps,
   ratings,
+  rating: ``,
   countries,
   isFavorite: true,
   isWatched: false,

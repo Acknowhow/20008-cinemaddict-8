@@ -27,6 +27,8 @@ export default () => {
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      let producedPopupBuilders = [];
+
       const {ratings, titles, images} = card;
 
       const src = getRandomArrayElement(images);
@@ -34,6 +36,18 @@ export default () => {
 
       const cardContainer = new CardContainer(ratings);
       const popupContainer = new PopupContainer(src, title);
+
+      const formSubmission = (evt) => {
+        evt.preventDefault();
+
+        if (evt.ctrlKey === true && evt.keyCode === 13) {
+
+          popupContainer.onSubmit = (newData) => {
+            card.comment = newData.comment;
+            card.rating = newData.rating;
+          }
+        }
+      };
 
       const popupBuilders = [
         buildInfo, buildComment, buildRating
@@ -46,15 +60,18 @@ export default () => {
       cardContainer.onComments = () => {
         popupContainer.render();
 
-        manufacture(card, popupContainer.element, ...popupBuilders);
+        producedPopupBuilders = manufacture(
+          card, popupContainer.element, ...popupBuilders);
 
         body.appendChild(popupContainer.element);
+        body.addEventListener('keydown', formSubmission);
         cardContainer.unbind();
       };
 
       popupContainer.onClose = () => {
         cardContainer.bind();
 
+        body.removeEventListener('keydown', formSubmission);
         body.removeChild(popupContainer.element);
         popupContainer.unrender();
       };
