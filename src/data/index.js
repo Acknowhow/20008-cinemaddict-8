@@ -74,6 +74,14 @@ const countries = [
   `India`, `New Zealand`, `Australia`
 ];
 
+const comments = [
+  `This was awesome`, `Poor acting`,
+  `This was like having a bunch salty french fries on Saturday morning`,
+  `I doubt that acting could ever bring him an Oscar`,
+  `Fantastic screenplay`,
+  `Twisted plot with naive ending`
+];
+
 export const Comments = {
   [`sleeping`]: `😴`,
   [`neutral-face`]: `😐`,
@@ -90,6 +98,7 @@ export const card = {
   episodes,
   genres,
   images,
+  comments,
   comment: ``,
   audiences,
   premiereTimestamps,
@@ -101,8 +110,6 @@ export const card = {
   isWatched: false,
   willWatch: true
 };
-
-
 
 
 export const filters = [

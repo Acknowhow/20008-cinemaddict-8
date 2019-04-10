@@ -17,11 +17,7 @@ export default class Container extends Component {
   _processForm(formData) {
     const entry = {
       rating: null,
-      comments: {
-        [`sleeping`]: ``,
-        [`neutral-face`]: ``,
-        [`grinning`]: ``
-      }
+      comment: ``
     };
 
     const ContainerMapper = Container.createMapper(entry);
@@ -139,7 +135,7 @@ export default class Container extends Component {
 
   static createMapper(target) {
     return {
-      [`comment-emoji`]: (value) => target.comment = value,
+      comment: (value) => target.comment = value,
       score: (value) => target.score = value
     }
   }

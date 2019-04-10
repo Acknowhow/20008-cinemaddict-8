@@ -332,6 +332,14 @@ const countries = [
   `India`, `New Zealand`, `Australia`
 ];
 
+const comments = [
+  `This was awesome`, `Poor acting`,
+  `This was like having a bunch salty french fries on Saturday morning`,
+  `I doubt that acting could ever bring him an Oscar`,
+  `Fantastic screenplay`,
+  `Twisted plot with naive ending`
+];
+
 const Comments = {
   [`sleeping`]: `😴`,
   [`neutral-face`]: `😐`,
@@ -348,6 +356,7 @@ const card = {
   episodes,
   genres,
   images,
+  comments,
   comment: ``,
   audiences,
   premiereTimestamps,
@@ -484,14 +493,15 @@ const filtersContainer = body.querySelector(
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      let main;
       let producedPopupBuilders = [];
 
-      const {ratings, titles, images} = _data__WEBPACK_IMPORTED_MODULE_0__["card"];
+      const {comments, titles, images} = _data__WEBPACK_IMPORTED_MODULE_0__["card"];
 
       const src = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_8__["getRandomArrayElement"])(images);
       const title = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_8__["getRandomArrayElement"])(titles);
 
-      const cardContainer = new _container_container_concreter__WEBPACK_IMPORTED_MODULE_1__["default"](ratings);
+      const cardContainer = new _container_container_concreter__WEBPACK_IMPORTED_MODULE_1__["default"](comments);
       const popupContainer = new _popup_container_container_concreter__WEBPACK_IMPORTED_MODULE_2__["default"](src, title);
 
       const formSubmission = (evt) => {
@@ -512,7 +522,7 @@ const filtersContainer = body.querySelector(
 
       cardsContainer.appendChild(cardContainer.render());
 
-      Object(_main_main_builder__WEBPACK_IMPORTED_MODULE_3__["default"])(_data__WEBPACK_IMPORTED_MODULE_0__["card"], cardContainer.element);
+      main = Object(_main_main_builder__WEBPACK_IMPORTED_MODULE_3__["default"])(_data__WEBPACK_IMPORTED_MODULE_0__["card"], cardContainer.element);
 
       cardContainer.onComments = () => {
         popupContainer.render();
@@ -553,9 +563,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class Container extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"] {
-  constructor(ratings) {
+  constructor(comments) {
     super();
-    this.ratings = ratings;
+    this._comments = comments;
     this._onComments = null;
 
     this._onCommentsButtonClick = this._onCommentsButtonClick.bind(this);
@@ -578,7 +588,7 @@ class Container extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"
   get template() {
     return `<article class="film-card film-card">
 
-          <button class="film-card__comments">${this.ratings.length} comments</button>
+          <button class="film-card__comments">${this._comments.length} comments</button>
           <form class="film-card__controls">
             <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist"><!--Add to watchlist--> WL</button>
             <button class="film-card__controls-item button film-card__controls-item--mark-as-watched"><!--Mark as watched-->WTCHD</button>
@@ -596,6 +606,10 @@ class Container extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"
   unbind() {
     this._element.querySelector(`.film-card__comments`)
       .removeEventListener(`click`, this._onCommentsButtonClick);
+  }
+
+  update(data) {
+    this._comments = data.comments;
   }
 }
 
@@ -624,18 +638,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
   const title = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(titles);
-  const averageRating = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getAverageRating"])(ratings);
   const releaseYear = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getYear"])(Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(releaseTimestamps));
   const duration = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getHoursMinutes"])(Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(durations));
   const genre = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(genres);
-  const imagePath = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getImagePath"])(Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(images));
+  const src = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getImagePath"])(Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getRandomArrayElement"])(images));
   const description = Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["generateRandomText"])(descriptions, ``);
 
-  const markup = Object(_main_concreter__WEBPACK_IMPORTED_MODULE_0__["default"])(
-      title, averageRating, releaseYear,
-      duration, genre, imagePath, description);
+  const main = new _main_concreter__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    title, ratings, releaseYear,
+    duration, genre, src, description});
 
-  container.insertAdjacentHTML(`afterbegin`, markup);
+  container.appendChild(main.render());
+
+  return main;
 });
 
 
@@ -650,20 +665,44 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ((title, averageRating, releaseYear,
-    duration, genre, imagePath, description) => {
-  return `
-      <h3 class="film-card__title">${title}</h3>
-      <p class="film-card__rating">${averageRating}</p>
-      <p class="film-card__info">
-        <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${duration}</span>
-        <span class="film-card__genre">${genre}</span>
-      </p>
-      <img src="${imagePath}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>`;
-});
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Main; });
+/* harmony import */ var _assets_concreter__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../assets/concreter */ "./src/assets/concreter/index.js");
+/* harmony import */ var _assets_handler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../assets/handler */ "./src/assets/handler/index.js");
 
+
+
+class Main extends _assets_concreter__WEBPACK_IMPORTED_MODULE_0__["default"] {
+  constructor(data) {
+    super();
+
+    this._title = data.title;
+    this._ratings = data.ratings;
+    this._releaseYear = data.releaseYear;
+    this._duration = data.duration;
+    this._genre = data.genre;
+    this._src = data.src;
+    this._description = data.description;
+  }
+
+  get template() {
+    return `
+      <h3 class="film-card__title">${this._title}</h3>
+      <p class="film-card__rating">${Object(_assets_handler__WEBPACK_IMPORTED_MODULE_1__["getAverageRating"])(this._ratings)}</p>
+      <p class="film-card__info">
+        <span class="film-card__year">${this._releaseYear}</span>
+        <span class="film-card__duration">${this._duration}</span>
+        <span class="film-card__genre">${this._genre}</span>
+      </p>
+      <img src="${this._src}" alt="" class="film-card__poster">
+      <p class="film-card__description">${this._description}</p>`
+
+  }
+
+  update() {
+
+
+  }
+}
 
 
 /***/ }),

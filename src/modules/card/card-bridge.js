@@ -27,14 +27,15 @@ export default () => {
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      let main;
       let producedPopupBuilders = [];
 
-      const {ratings, titles, images} = card;
+      const {comments, titles, images} = card;
 
       const src = getRandomArrayElement(images);
       const title = getRandomArrayElement(titles);
 
-      const cardContainer = new CardContainer(ratings);
+      const cardContainer = new CardContainer(comments);
       const popupContainer = new PopupContainer(src, title);
 
       const formSubmission = (evt) => {
@@ -44,7 +45,7 @@ export default () => {
 
           popupContainer.onSubmit = (newData) => {
             card.comment = newData.comment;
-            card.rating = newData.rating;
+            card.rating = newData.score;
           }
         }
       };
@@ -55,7 +56,7 @@ export default () => {
 
       cardsContainer.appendChild(cardContainer.render());
 
-      buildMain(card, cardContainer.element);
+      main = buildMain(card, cardContainer.element);
 
       cardContainer.onComments = () => {
         popupContainer.render();

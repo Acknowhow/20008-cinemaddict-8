@@ -1,4 +1,4 @@
-import concreteMain from './main-concreter';
+import Main from './main-concreter';
 import {
   getImagePath,
   getRandomArrayElement,
@@ -15,16 +15,17 @@ export default (card, container) => {
 
 
   const title = getRandomArrayElement(titles);
-  const averageRating = getAverageRating(ratings);
   const releaseYear = getYear(getRandomArrayElement(releaseTimestamps));
   const duration = getHoursMinutes(getRandomArrayElement(durations));
   const genre = getRandomArrayElement(genres);
-  const imagePath = getImagePath(getRandomArrayElement(images));
+  const src = getImagePath(getRandomArrayElement(images));
   const description = generateRandomText(descriptions, ``);
 
-  const markup = concreteMain(
-      title, averageRating, releaseYear,
-      duration, genre, imagePath, description);
+  const main = new Main({
+    title, ratings, releaseYear,
+    duration, genre, src, description});
 
-  container.insertAdjacentHTML(`afterbegin`, markup);
+  container.appendChild(main.render());
+
+  return main;
 };
