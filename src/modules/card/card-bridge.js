@@ -43,12 +43,10 @@ export default () => {
 
           popupContainer.onSubmit = (newData) => {
 
-            card.comment = newData.comment;
-            card.rating = newData.score;
+            card.comments.push(newData);
 
-            console.log(newData);
+            cardContainer.update(card)
 
-            cardContainer.bind();
             body.removeEventListener('keydown', formSubmission);
             body.removeChild(popupContainer.element);
 

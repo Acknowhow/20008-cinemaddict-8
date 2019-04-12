@@ -17,6 +17,11 @@ export default class Container extends Component {
     }
   }
 
+  _partialUpdate() {
+    this._element.querySelector(`.film-card__comments`).innerHTML =
+      `${this._comments.length} comments`;
+  }
+
   set onComments(fn) {
     this._onComments = fn;
   }
@@ -47,5 +52,8 @@ export default class Container extends Component {
 
   update(data) {
     this._comments = data.comments;
+
+    this._partialUpdate();
+    this.bind();
   }
 }

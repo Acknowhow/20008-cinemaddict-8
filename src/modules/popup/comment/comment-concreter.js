@@ -9,26 +9,22 @@ export default class Comment extends Component {
   }
 
   _getUserComments() {
-    const array = [];
 
-    const comments = Object.assign({}, Comments);
+    return this._comments.map((value, key) => {
+      const emoji = this._comments[key][`comment-emoji`];
 
-
-    for (const [key, value] of Object.entries(this._comments)) {
-      comments.value = value;
-
-      array.push(`
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">${Comment.createMapper(comments)}</span>
-            <div>
-              <p class="film-details__comment-text">So long-long story, boring!</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">Tim Macoveev</span>
-                <span class="film-details__comment-day">3 days ago</span>
-              </p>
-            </div>
-          </li>`)
-    }
+      return `
+        <li class="film-details__comment">
+          <span class="film-details__comment-emoji">${Comments[emoji]}</span>
+          <div>
+            <p class="film-details__comment-text">${this._comments[key][`comment`]}</p>
+            <p class="film-details__comment-info">
+              <span class="film-details__comment-author">Tim Macoveev</span>
+              <span class="film-details__comment-day">3 days ago</span>
+            </p>
+          </div>
+        </li>`
+    })
   }
 
   _getComments() {
@@ -52,20 +48,9 @@ export default class Comment extends Component {
   get template() {
     return `
       <div>
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
         
-        <ul class="film-details__comments-list">
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">😴</span>
-            <div>
-              <p class="film-details__comment-text">So long-long story, boring!</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">Tim Macoveev</span>
-                <span class="film-details__comment-day">3 days ago</span>
-              </p>
-            </div>
-          </li>
-        </ul>
+        <ul class="film-details__comments-list">${this._getUserComments().join(``)}</ul>
         
         <div class="film-details__new-comment">
           <div>
@@ -87,11 +72,5 @@ export default class Comment extends Component {
 
   bind() {
     // Bind Ctrl + Enter
-  }
-
-  static createMapper(target) {
-    return {
-      [`comment-emoji`]: (value) => target[`comment-emoji`] = value,
-    }
   }
 }

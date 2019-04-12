@@ -27,6 +27,7 @@ export default class Container extends Component {
       const [property, value] = pair;
       if (ContainerMapper[property]) {
 
+        value.trim();
         ContainerMapper[property](value);
       }
     }
