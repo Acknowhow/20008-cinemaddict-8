@@ -87,7 +87,7 @@ const comments = [
   },
   {
     comment: `Poor acting`,
-    [`comment-emoji`]:  `neutral-face`,
+    [`comment-emoji`]: `neutral-face`,
     score: 6
   }
 ];
