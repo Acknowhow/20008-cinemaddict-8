@@ -2,8 +2,33 @@ import Component from '../../../assets/concreter';
 import {Comments} from '../../../data';
 
 export default class Comment extends Component {
-  constructor() {
+  constructor(comments) {
     super();
+    this._comments = comments;
+
+  }
+
+  _getUserComments() {
+    const array = [];
+
+    const comments = Object.assign({}, Comments);
+
+
+    for (const [key, value] of Object.entries(this._comments)) {
+      comments.value = value;
+
+      array.push(`
+          <li class="film-details__comment">
+            <span class="film-details__comment-emoji">${Comment.createMapper(comments)}</span>
+            <div>
+              <p class="film-details__comment-text">So long-long story, boring!</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">Tim Macoveev</span>
+                <span class="film-details__comment-day">3 days ago</span>
+              </p>
+            </div>
+          </li>`)
+    }
   }
 
   _getComments() {
@@ -62,5 +87,11 @@ export default class Comment extends Component {
 
   bind() {
     // Bind Ctrl + Enter
+  }
+
+  static createMapper(target) {
+    return {
+      [`comment-emoji`]: (value) => target[`comment-emoji`] = value,
+    }
   }
 }

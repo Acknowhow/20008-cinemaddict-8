@@ -74,12 +74,32 @@ const countries = [
   `India`, `New Zealand`, `Australia`
 ];
 
+// Make Object
 const comments = [
-  `This was awesome`, `Poor acting`,
+  `This was awesome`,
+  `Poor acting`,
   `This was like having a bunch salty french fries on Saturday morning`,
   `I doubt that acting could ever bring him an Oscar`,
   `Fantastic screenplay`,
   `Twisted plot with naive ending`
+];
+
+const userComments = [
+  {
+    comment: `So long story, so boring`,
+    [`comment-emoji`]: `sleeping`,
+    score: 7
+  },
+  {
+    comment: `This was awesome`,
+    [`comment-emoji`]: `grinning`,
+    score: 9
+  },
+  {
+    comment: `Poor acting`,
+    [`comment-emoji`]:  `neutral-face`,
+    score: 6
+  }
 ];
 
 export const Comments = {

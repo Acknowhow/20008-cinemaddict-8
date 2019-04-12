@@ -11,7 +11,7 @@ import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
 
 import {getRandomArrayElement} from '../../assets/handler';
-import {manufacture} from "../../assets/factory";
+import {manufacture} from '../../assets/factory';
 
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
@@ -39,13 +39,20 @@ export default () => {
       const popupContainer = new PopupContainer(src, title);
 
       const formSubmission = (evt) => {
-        evt.preventDefault();
-
         if (evt.ctrlKey === true && evt.keyCode === 13) {
 
           popupContainer.onSubmit = (newData) => {
+
             card.comment = newData.comment;
             card.rating = newData.score;
+
+            console.log(newData);
+
+            cardContainer.bind();
+            body.removeEventListener('keydown', formSubmission);
+            body.removeChild(popupContainer.element);
+
+            popupContainer.unrender();
           }
         }
       };
@@ -66,6 +73,7 @@ export default () => {
 
         body.appendChild(popupContainer.element);
         body.addEventListener('keydown', formSubmission);
+
         cardContainer.unbind();
       };
 
