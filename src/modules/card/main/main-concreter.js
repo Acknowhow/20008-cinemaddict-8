@@ -1,14 +1,36 @@
-export default (title, averageRating, releaseYear,
-    duration, genre, imagePath, description) => {
-  return `
-      <h3 class="film-card__title">${title}</h3>
-      <p class="film-card__rating">${averageRating}</p>
-      <p class="film-card__info">
-        <span class="film-card__year">${releaseYear}</span>
-        <span class="film-card__duration">${duration}</span>
-        <span class="film-card__genre">${genre}</span>
-      </p>
-      <img src="${imagePath}" alt="" class="film-card__poster">
-      <p class="film-card__description">${description}</p>`;
-};
+import Component from '../../../assets/concreter';
+import {getAverageRating} from '../../../assets/handler';
 
+export default class Main extends Component {
+  constructor(data) {
+    super();
+
+    this._title = data.title;
+    this._ratings = data.ratings;
+    this._releaseYear = data.releaseYear;
+    this._duration = data.duration;
+    this._genre = data.genre;
+    this._src = data.src;
+    this._description = data.description;
+  }
+
+  get template() {
+    return `
+      <div>
+        <h3 class="film-card__title">${this._title}</h3>
+        <p class="film-card__rating">${getAverageRating(this._ratings)}</p>
+        <p class="film-card__info">
+          <span class="film-card__year">${this._releaseYear}</span>
+          <span class="film-card__duration">${this._duration}</span>
+          <span class="film-card__genre">${this._genre}</span>
+        </p>
+        <img src="${this._src}" alt="" class="film-card__poster">
+        <p class="film-card__description">${this._description}</p>
+      </div>`;
+  }
+
+  update() {
+
+
+  }
+}

@@ -1,13 +1,12 @@
 import Component from '../../../assets/concreter';
 
 export default class Container extends Component {
-  constructor(ratings) {
+  constructor(comments) {
     super();
-    this.ratings = ratings;
+    this._comments = comments;
     this._onComments = null;
 
     this._onCommentsButtonClick = this._onCommentsButtonClick.bind(this);
-
   }
 
   _onCommentsButtonClick(e) {
@@ -18,6 +17,11 @@ export default class Container extends Component {
     }
   }
 
+  _partialUpdate() {
+    this._element.querySelector(`.film-card__comments`).innerHTML =
+      `${this._comments.length} comments`;
+  }
+
   set onComments(fn) {
     this._onComments = fn;
   }
@@ -26,7 +30,7 @@ export default class Container extends Component {
   get template() {
     return `<article class="film-card film-card">
 
-          <button class="film-card__comments">${this.ratings.length} comments</button>
+          <button class="film-card__comments">${this._comments.length} comments</button>
           <form class="film-card__controls">
             <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist"><!--Add to watchlist--> WL</button>
             <button class="film-card__controls-item button film-card__controls-item--mark-as-watched"><!--Mark as watched-->WTCHD</button>
@@ -44,5 +48,12 @@ export default class Container extends Component {
   unbind() {
     this._element.querySelector(`.film-card__comments`)
       .removeEventListener(`click`, this._onCommentsButtonClick);
+  }
+
+  update(data) {
+    this._comments = data.comments;
+
+    this._partialUpdate();
+    this.bind();
   }
 }

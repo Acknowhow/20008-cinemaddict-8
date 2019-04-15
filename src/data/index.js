@@ -64,8 +64,9 @@ const digitalReleaseTimestamps = [
 
 // array
 const ratings = [
-  5, 7, 10, 9, 10, 8, 7, 4
+  1, 2, 3, 4, 5, 6, 7, 8, 9
 ];
+
 
 // set
 const countries = [
@@ -73,6 +74,29 @@ const countries = [
   `India`, `New Zealand`, `Australia`
 ];
 
+const comments = [
+  {
+    comment: `So long story, so boring`,
+    [`comment-emoji`]: `sleeping`,
+    score: 7
+  },
+  {
+    comment: `This was awesome`,
+    [`comment-emoji`]: `grinning`,
+    score: 9
+  },
+  {
+    comment: `Poor acting`,
+    [`comment-emoji`]: `neutral-face`,
+    score: 6
+  }
+];
+
+export const Comments = {
+  [`sleeping`]: `😴`,
+  [`neutral-face`]: `😐`,
+  [`grinning`]: `😀`
+};
 
 export const card = {
   titles,
@@ -84,10 +108,13 @@ export const card = {
   episodes,
   genres,
   images,
+  comments,
+  comment: ``,
   audiences,
   premiereTimestamps,
   digitalReleaseTimestamps,
   ratings,
+  rating: ``,
   countries,
   isFavorite: true,
   isWatched: false,

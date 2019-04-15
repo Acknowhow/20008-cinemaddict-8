@@ -1,18 +1,24 @@
 import {card, filters} from '../../data';
 
-import buildContainer from './container/container-builder';
-import buildMain from './main/main-builder';
-import buildPopup from './popup/popup-builder';
+import CardContainer from './container/container-concreter';
+import PopupContainer from './../popup/container/container-concreter';
 
+import buildMain from './main/main-builder';
 import buildFilter from './../filter/filter-builder';
 
-const body = document.querySelector(`body`);
+import buildInfo from './../popup/info/info-builder';
+import buildComment from './../popup/comment/comment-builder';
+import buildRating from './../popup/rating/rating-builder.js';
 
+import {getRandomArrayElement} from '../../assets/handler';
+import {manufacture} from '../../assets/factory';
+
+const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
 
 const filtersContainer = body.querySelector(
-  `.main-navigation`);
+    `.main-navigation`);
 
 export default () => {
   buildFilter(filters, filtersContainer);
@@ -21,27 +27,61 @@ export default () => {
     const {target} = e;
 
     if (target.tagName.toUpperCase() === `A`) {
+      let main;
+      let producedPopupBuilders = [];
 
-      const container = buildContainer(card);
-      const popup = buildPopup(card);
+      const {comments, titles, images} = card;
 
-      const getContainer = () => cardsContainer.appendChild(container.render());
+      const src = getRandomArrayElement(images);
+      const title = getRandomArrayElement(titles);
 
-      buildMain(card, getContainer());
+      const cardContainer = new CardContainer(comments);
+      const popupContainer = new PopupContainer(src, title);
 
-      container.onComments = () => {
-        popup.render();
+      const formSubmission = (evt) => {
+        if (evt.ctrlKey === true && evt.keyCode === 13) {
 
-        body.appendChild(popup.element);
-        container.unbind();
-      }
+          popupContainer.onSubmit = (newData) => {
 
-      popup.onClose = () => {
-        container.bind();
+            card.comments.push(newData);
 
-        body.removeChild(popup.element);
-        popup.unrender();
-      }
+            cardContainer.update(card)
+
+            body.removeEventListener('keydown', formSubmission);
+            body.removeChild(popupContainer.element);
+
+            popupContainer.unrender();
+          }
+        }
+      };
+
+      const popupBuilders = [
+        buildInfo, buildComment, buildRating
+      ];
+
+      cardsContainer.appendChild(cardContainer.render());
+
+      main = buildMain(card, cardContainer.element);
+
+      cardContainer.onComments = () => {
+        popupContainer.render();
+
+        producedPopupBuilders = manufacture(
+          card, popupContainer.element, ...popupBuilders);
+
+        body.appendChild(popupContainer.element);
+        body.addEventListener('keydown', formSubmission);
+
+        cardContainer.unbind();
+      };
+
+      popupContainer.onClose = () => {
+        cardContainer.bind();
+
+        body.removeEventListener('keydown', formSubmission);
+        body.removeChild(popupContainer.element);
+        popupContainer.unrender();
+      };
     }
   });
 };
