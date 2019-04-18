@@ -1,16 +1,26 @@
 import Component from '../../../assets/concreter';
 
 export default class Container extends Component {
-  constructor(src, title) {
+  constructor(data) {
     super();
 
-    this._src = src;
-    this._title = title;
+    this._image = data.image;
+    this._title = data.title;
+
+    this._isFavorite = data.isFavorite;
+    this._isWatched = data.isWatched;
+    this._willWatch = data.willWatch;
 
     this._onClose = null;
     this._onSubmit = null;
 
+    this._onAddToWatchList = null;
+    this._onMarkAsWatched = null;
+
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+
+    this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
+    // this._onMarkAsWatchedButtonClick = this._onMarkAsWatchedButtonClick.bind(this);
 
   }
 
@@ -35,6 +45,22 @@ export default class Container extends Component {
     return entry;
   }
 
+  _getWatchStatus() {
+    let markup;
+
+    if (this._isWatched) {
+      markup = `<span class="film-details__watched-status film-details__watched-status&#45;&#45;active">Already watched</span>`
+    }
+    if (this._willWatch && !this._isWatched) {
+
+      markup = `<span class="film-details__watched-status film-details__watched-status&#45;&#45;active">Will watch</span>`
+    } if (!this._isWatched && !this._willWatch) {
+      markup = `<span class="film-details__watched-status film-details__watched-status"></span>`
+    }
+
+    return markup;
+  }
+
   _onCloseButtonClick(e) {
     e.preventDefault();
 
@@ -55,6 +81,16 @@ export default class Container extends Component {
     }
   }
 
+  _onAddToWatchListButtonClick(e) {
+    e.preventDefault();
+
+    const {target} = e;
+
+    if (typeof this._onAddToWatchList === `function`) {
+      this._onAddToWatchList(target);
+    }
+  }
+
   set onClose(fn) {
     this._onClose = fn;
   }
@@ -62,6 +98,10 @@ export default class Container extends Component {
   set onSubmit(fn) {
     this._onSubmit = fn;
     this._onSubmitAction();
+  }
+
+  set onAddToWatchList(fn) {
+    this._onAddToWatchList = fn;
   }
 
   get template() {
@@ -78,13 +118,13 @@ export default class Container extends Component {
           </div>
       
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._willWatch && `checked`}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
       
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" checked>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._isWatched && `checked`}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
       
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
       
@@ -95,15 +135,14 @@ export default class Container extends Component {
           </section>
       
           <section class="film-details__user-rating-wrap">
-            <div class="film-details__user-rating-controls">
-              <span class="film-details__watched-status film-details__watched-status--active">Already watched</span>
+            <div class="film-details__user-rating-controls">${this._getWatchStatus()}
               <button class="film-details__watched-reset" type="button">undo</button>
             </div>
       
             <div class="film-details__user-score">
             
               <div class="film-details__user-rating-poster">
-                <img src="${this._src}" alt="film-poster" class="film-details__user-rating-img">
+                <img src="${this._image}" alt="film-poster" class="film-details__user-rating-img">
               </div>
               
               <section class="film-details__user-rating-inner">
@@ -127,11 +166,17 @@ export default class Container extends Component {
   bind() {
     this._element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._onCloseButtonClick);
+
+    this._element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, this._onAddToWatchListButtonClick);
   }
 
   unbind() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseButtonClick);
+
+    this._element.querySelector(`.film-details__control-label--watchlist`)
+      .removeEventListener(`click`, this._onAddToWatchListButtonClick);
   }
 
   static createMapper(target) {

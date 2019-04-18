@@ -2,28 +2,19 @@ import Main from './main-concreter';
 import {
   getImagePath,
   getRandomArrayElement,
-  generateRandomText,
-  getAverageRating,
-  getYear, getHoursMinutes
+  getHoursMinutes
 } from '../../../assets/handler';
 
 export default (card, container) => {
   const {
-    titles, ratings, releaseTimestamps,
-    durations, genres, images, descriptions
+    title, ratings, releaseYear,
+    duration, genre, image, description
   } = card;
 
 
-  const title = getRandomArrayElement(titles);
-  const releaseYear = getYear(getRandomArrayElement(releaseTimestamps));
-  const duration = getHoursMinutes(getRandomArrayElement(durations));
-  const genre = getRandomArrayElement(genres);
-  const src = getImagePath(getRandomArrayElement(images));
-  const description = generateRandomText(descriptions, ``);
-
   const main = new Main({
     title, ratings, releaseYear,
-    duration, genre, src, description});
+    duration, genre, image, description});
 
   container.appendChild(main.render());
 

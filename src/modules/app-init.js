@@ -1,5 +1,5 @@
-import bridgeCard from './card/card-bridge';
+import buildCard from './card/card-builder';
 
 export default () => {
-  bridgeCard();
+  buildCard();
 };

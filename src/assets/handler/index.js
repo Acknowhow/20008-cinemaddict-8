@@ -38,3 +38,47 @@ export const getYear = (timestamp) => {
 export const getImagePath = (image) => {
   return `./images/posters/${image}`;
 };
+
+const getHistoryList = (cards) => {
+  return cards.filter((it) => it.isWatched === true);
+};
+
+const getWatchList = (cards) => {
+  return cards.filter((it) => it.willWatch === true);
+};
+
+const getFavoritesList = (cards) => {
+  return cards.filter((it) => it.isFavorite === true);
+};
+
+export const getFiltersState = (cards, filters) => {
+  return filters.map((it) => {
+
+    switch (it.name) {
+      case `watchlist`:
+        it.count = getWatchList(cards).length;
+        it.state = it.count > 0 ? `` : false;
+        return it;
+
+      case `history`:
+        it.count = getHistoryList(cards).length;
+        it.state = it.count > 0 ? `` : false;
+        return it;
+
+      case `favorites`:
+        it.count = getFavoritesList(cards).length;
+        it.state = it.count > 0 ? `` : false;
+        return it;
+
+      case `stats`:
+        it.count = null;
+        it.state = `additional`;
+        return it;
+
+      default:
+        it.count = null;
+        it.state = `active`;
+        return it;
+    }
+  });
+};
