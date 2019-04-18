@@ -69,8 +69,12 @@ export default (cards) => {
       cardContainer.unbind();
     };
 
-    popupContainer.onAddToWatchList = (target) => {
-      console.log(target)
+    popupContainer.onControls = (target) => {
+      card.isWatched = target.isWatched;
+      card.willWatch = target.willWatch;
+      card.isFavorite = target.isFavorite;
+
+      popupContainer.update(card);
 
     };
 

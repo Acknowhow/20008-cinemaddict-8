@@ -398,6 +398,12 @@ export const Filter = {
   [`#stats`]: `stats`
 };
 
+export const Control = {
+  [`watchlist`]: `willWatch`,
+  [`watched`]: `isWatched`,
+  [`favorite`]: `isFavorite`
+};
+
 
 export const filters = [
   {

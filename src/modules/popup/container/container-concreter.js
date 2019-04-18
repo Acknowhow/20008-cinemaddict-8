@@ -1,3 +1,5 @@
+import {Control} from '../../../data';
+
 import Component from '../../../assets/concreter';
 
 export default class Container extends Component {
@@ -13,15 +15,10 @@ export default class Container extends Component {
 
     this._onClose = null;
     this._onSubmit = null;
-
-    this._onAddToWatchList = null;
-    this._onMarkAsWatched = null;
+    this._onControls = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
-
-    this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
-    // this._onMarkAsWatchedButtonClick = this._onMarkAsWatchedButtonClick.bind(this);
-
+    this._onControlsButtonClick = this._onControlsButtonClick.bind(this);
   }
 
   _processForm(formData) {
@@ -61,6 +58,14 @@ export default class Container extends Component {
     return markup;
   }
 
+  _updateWatchStatus() {
+    const controls = this._element.querySelector(`
+      .film-details__user-rating-controls`);
+
+    controls.firstElementChild.remove();
+    controls.insertAdjacentHTML(`afterbegin`, this._getWatchStatus());
+  }
+
   _onCloseButtonClick(e) {
     e.preventDefault();
 
@@ -81,13 +86,28 @@ export default class Container extends Component {
     }
   }
 
-  _onAddToWatchListButtonClick(e) {
+  _onControlsButtonClick(e) {
     e.preventDefault();
 
+    const entry = {
+      willWatch: this._willWatch,
+      isWatched: this._isWatched,
+      isFavorite: this._isFavorite
+    };
     const {target} = e;
 
-    if (typeof this._onAddToWatchList === `function`) {
-      this._onAddToWatchList(target);
+    if (typeof this._onControls === `function` &&
+      target.tagName.toUpperCase() === `LABEL`) {
+
+      const controlValue = target.attributes[`for`].nodeValue;
+      const controlInput = this._element.querySelector(`#${controlValue}`);
+
+      const ContainerIsChecked = Container.getInputStatus(controlInput);
+      const ContainerMapper = Container.createMapper(entry);
+
+      ContainerMapper[controlValue](ContainerIsChecked);
+
+      this._onControls(entry);
     }
   }
 
@@ -100,8 +120,8 @@ export default class Container extends Component {
     this._onSubmitAction();
   }
 
-  set onAddToWatchList(fn) {
-    this._onAddToWatchList = fn;
+  set onControls(fn) {
+    this._onControls = fn;
   }
 
   get template() {
@@ -118,13 +138,13 @@ export default class Container extends Component {
           </div>
       
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._willWatch && `checked`}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${this._willWatch ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
       
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._isWatched && `checked`}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${this._isWatched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
       
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite && `checked`}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${this._isFavorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
       
@@ -167,23 +187,52 @@ export default class Container extends Component {
     this._element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._onCloseButtonClick);
 
-    this._element.querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, this._onAddToWatchListButtonClick);
+    this._element.querySelector(`.film-details__controls`)
+      .addEventListener(`click`, this._onControlsButtonClick);
   }
 
   unbind() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseButtonClick);
 
-    this._element.querySelector(`.film-details__control-label--watchlist`)
-      .removeEventListener(`click`, this._onAddToWatchListButtonClick);
+    this._element.querySelector(`.film-details__controls`)
+      .removeEventListener(`click`, this._onControlsButtonClick);
   }
 
   static createMapper(target) {
     return {
       [`comment-emoji`]: (value) => target[`comment-emoji`] = value,
       comment: (value) => target.comment = value,
-      score: (value) => target.score = value
+      score: (value) => target.score = value,
+      watchlist: (value) => target.willWatch = value,
+      watched: (value) => target.isWatched = value,
+      favorite: (value) => target.isFavorite = value
     }
+  }
+
+  static getInputStatus(input) {
+    let isChecked;
+
+    if (input.hasAttribute(`checked`)) {
+      input.removeAttribute(`checked`);
+
+      isChecked = false;
+    } else {
+      input.setAttribute(`checked`, `checked`);
+
+      isChecked = true;
+    }
+    return isChecked;
+  }
+
+  update(data) {
+    this._isFavorite = data.isFavorite;
+    this._willWatch = data.willWatch;
+    this._isWatched = data.isWatched;
+
+    this.unbind();
+    this._updateWatchStatus();
+    this.bind();
+
   }
 }
