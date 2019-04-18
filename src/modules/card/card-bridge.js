@@ -1,3 +1,5 @@
+// import moment from 'moment';
+// import momentDurationFormat from 'moment-duration-format/lib/moment-duration-format';
 import {card, filters} from '../../data';
 
 import CardContainer from './container/container-concreter';
@@ -22,6 +24,7 @@ const filtersContainer = body.querySelector(
 
 export default () => {
   buildFilter(filters, filtersContainer);
+
 
   filtersContainer.addEventListener(`click`, (e) => {
     const {target} = e;
