@@ -1,5 +1,3 @@
-import {Control} from '../../../data';
-
 import Component from '../../../assets/concreter';
 
 export default class Container extends Component {
@@ -233,6 +231,5 @@ export default class Container extends Component {
     this.unbind();
     this._updateWatchStatus();
     this.bind();
-
   }
 }

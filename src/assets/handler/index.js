@@ -1,3 +1,36 @@
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duration-format';
+momentDurationFormatSetup(moment);
+
+const getHistoryList = (cards) => {
+  return cards.filter((it) => it.isWatched === true);
+};
+
+const getWatchList = (cards) => {
+  return cards.filter((it) => it.willWatch === true);
+};
+
+const getFavoritesList = (cards) => {
+  return cards.filter((it) => it.isFavorite === true);
+};
+
+const getArrayMax = (array) => {
+  return array.reduce((p, v) => {
+    return (p > v ? p : v);
+  })
+};
+
+export const getHoursValue = (string) => {
+  return [...string].slice(
+    0, string.indexOf(`h`)).join(``);
+};
+
+export const getMinutesValue = (string) => {
+  const startIndex = string.indexOf(` `) + 1;
+  return [...string].slice(
+    startIndex, string.indexOf(`m`)).join(``);
+};
+
 export const getRandomIntInclusive = (min, max) => {
   const minCeil = Math.ceil(min);
   const maxFloor = Math.floor(max);
@@ -25,10 +58,51 @@ export const getAverageRating = (array) => {
   return (sum / clonedArray.length).toFixed(1);
 };
 
-export const getHoursMinutes = (seconds) => {
-  return new Date(
-      seconds * 1000 - 1000 * 60 * 60 * 3)
-      .toLocaleString().replace(/:/g, ' ').substring(15);
+export const getHoursMinutes = (minutes) => {
+  return moment.duration(minutes, `minutes`).format(`h[h] m[m]`);
+};
+
+export const getCardsByGenre = (cards) => {
+  return cards.map((it) => it.genre);
+};
+
+export const getCardsByGenreCounted = (cards) => {
+  return cards.reduce((accumulator, currentValue) => {
+
+    if (currentValue in accumulator) {
+      accumulator[currentValue]++;
+
+    } else {
+      accumulator[currentValue] = 1;
+    }
+
+    return accumulator;
+  }, {});
+};
+
+export const getCardsByGenreSorted = (object) => {
+  const sorted = Object.entries(object).sort((a, b) => a[1] < b[1]);
+  const genresArray = sorted.map((it) => it[0]);
+  const genresCountArray = sorted.map((it) => it[1]);
+
+  return {genresArray, genresCountArray};
+};
+
+export const getWatchedCardsTotalCount = (array) =>
+  array.filter((it) => it.isWatched === true).length;
+
+export const getCardsTotalDuration = (array) => {
+  const minutes = array.map((it) => it.duration).reduce((acc, cur) => acc + cur);
+
+  return getHoursMinutes(minutes);
+};
+
+
+export const getCardsTopGenre = (object) => {
+  const entries = [...Object.entries(object)];
+  const topCount = getArrayMax([...Object.values(object)]);
+
+  return entries.find((it) => it[1] === topCount)[0];
 };
 
 export const getYear = (timestamp) => {
@@ -39,16 +113,25 @@ export const getImagePath = (image) => {
   return `./images/posters/${image}`;
 };
 
-const getHistoryList = (cards) => {
-  return cards.filter((it) => it.isWatched === true);
-};
+export const getFilteredCards = (cards, filterName) => {
+  const filterNameToLowerCase = filterName.toLowerCase();
 
-const getWatchList = (cards) => {
-  return cards.filter((it) => it.willWatch === true);
-};
+  switch (filterNameToLowerCase) {
+    case `watchlist`:
+      return getWatchList(cards);
 
-const getFavoritesList = (cards) => {
-  return cards.filter((it) => it.isFavorite === true);
+    case `history`:
+      return getHistoryList(cards);
+
+    case `favorites`:
+      return getFavoritesList(cards);
+
+    case `stats`:
+      return `stats`;
+
+    default:
+      return cards;
+  }
 };
 
 export const getFiltersState = (cards, filters) => {

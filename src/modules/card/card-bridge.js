@@ -1,11 +1,7 @@
-// import moment from 'moment';
-// import momentDurationFormat from 'moment-duration-format/lib/moment-duration-format';
-
 import CardContainer from './container/container-concreter';
 import PopupContainer from './../popup/container/container-concreter';
 
 import buildMain from './main/main-builder';
-
 import buildInfo from './../popup/info/info-builder';
 import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
@@ -16,76 +12,78 @@ const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
 
-
 export default (cards) => {
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i];
+  cardsContainer.innerHTML = ``;
 
-    let main;
-    let producedPopupBuilders = [];
+  const renderCards = () => {
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
 
-    const {
-      comments, title, image,
-      isFavorite, isWatched, willWatch} = card;
+      let main;
+      let producedPopupBuilders = [];
 
-    const cardContainer = new CardContainer(comments);
-    const popupContainer = new PopupContainer(
-      {image, title, isFavorite, isWatched, willWatch});
+      const {
+        comments, title, image,
+        isFavorite, isWatched, willWatch} = card;
 
-    const formSubmission = (evt) => {
-      if (evt.ctrlKey === true && evt.keyCode === 13) {
+      const cardContainer = new CardContainer(comments);
+      const popupContainer = new PopupContainer(
+        {image, title, isFavorite, isWatched, willWatch});
 
-        popupContainer.onSubmit = (newData) => {
+      const formSubmission = (evt) => {
+        if (evt.ctrlKey === true && evt.keyCode === 13) {
 
-          card.comments.push(newData);
+          popupContainer.onSubmit = (newData) => {
 
-          cardContainer.update(card)
+            card.comments.push(newData);
+            cardContainer.update(card);
 
-          body.removeEventListener('keydown', formSubmission);
-          body.removeChild(popupContainer.element);
+            body.removeEventListener('keydown', formSubmission);
+            body.removeChild(popupContainer.element);
 
-          popupContainer.unrender();
+            popupContainer.unrender();
+          }
         }
-      }
-    };
+      };
 
-    const popupBuilders = [
-      buildInfo, buildComment, buildRating
-    ];
+      const popupBuilders = [
+        buildInfo, buildComment, buildRating
+      ];
 
-    cardsContainer.appendChild(cardContainer.render());
+      cardsContainer.appendChild(cardContainer.render());
+      main = buildMain(card, cardContainer.element);
 
-    main = buildMain(card, cardContainer.element);
+      cardContainer.onComments = () => {
+        popupContainer.render();
 
-    cardContainer.onComments = () => {
-      popupContainer.render();
+        producedPopupBuilders = manufacture(
+          card, popupContainer.element, ...popupBuilders);
 
-      producedPopupBuilders = manufacture(
-        card, popupContainer.element, ...popupBuilders);
+        body.appendChild(popupContainer.element);
+        body.addEventListener('keydown', formSubmission);
 
-      body.appendChild(popupContainer.element);
-      body.addEventListener('keydown', formSubmission);
+        cardContainer.unbind();
+      };
 
-      cardContainer.unbind();
-    };
+      popupContainer.onControls = (target) => {
+        card.isWatched = target.isWatched;
+        card.willWatch = target.willWatch;
+        card.isFavorite = target.isFavorite;
 
-    popupContainer.onControls = (target) => {
-      card.isWatched = target.isWatched;
-      card.willWatch = target.willWatch;
-      card.isFavorite = target.isFavorite;
+        popupContainer.update(card);
 
-      popupContainer.update(card);
+      };
 
-    };
+      popupContainer.onClose = () => {
+        cardContainer.bind();
 
-    popupContainer.onClose = () => {
-      cardContainer.bind();
-
-      body.removeEventListener('keydown', formSubmission);
-      body.removeChild(popupContainer.element);
-      popupContainer.unrender();
-    };
-  }
+        body.removeEventListener('keydown', formSubmission);
+        body.removeChild(popupContainer.element);
+        popupContainer.unrender();
+      };
+    }
+  };
+  renderCards();
 }
 
 

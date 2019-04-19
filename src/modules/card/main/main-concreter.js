@@ -8,7 +8,7 @@ export default class Main extends Component {
     this._title = data.title;
     this._ratings = data.ratings;
     this._releaseYear = data.releaseYear;
-    this._duration = data.duration;
+    this._duration = data.durationFormat;
     this._genre = data.genre;
     this._image = data.image;
     this._description = data.description;

@@ -1,4 +1,11 @@
-import {generateRandomText, getHoursMinutes, getImagePath, getRandomArrayElement, getYear} from '../assets/handler';
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duration-format';
+momentDurationFormatSetup(moment);
+
+import {
+  generateRandomText,
+  getImagePath,
+  getRandomArrayElement, getYear} from '../assets/handler';
 
 const titles = [
   `Usual Suspects`, `Scarface`, `Fight Club`, `Tokyo Story`,
@@ -108,7 +115,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -130,7 +137,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -152,7 +159,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -174,7 +181,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -196,7 +203,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -218,7 +225,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -231,7 +238,7 @@ export const cards = [
     rating: ``,
     countries,
     isFavorite: true,
-    isWatched: false,
+    isWatched: true,
     willWatch: true
   },
   {
@@ -240,7 +247,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -262,7 +269,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -275,7 +282,7 @@ export const cards = [
     rating: ``,
     countries,
     isFavorite: false,
-    isWatched: false,
+    isWatched: true,
     willWatch: false
   },
   {
@@ -284,7 +291,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -297,7 +304,7 @@ export const cards = [
     rating: ``,
     countries,
     isFavorite: true,
-    isWatched: false,
+    isWatched: true,
     willWatch: true
   },
   {
@@ -306,7 +313,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -319,7 +326,7 @@ export const cards = [
     rating: ``,
     countries,
     isFavorite: true,
-    isWatched: false,
+    isWatched: true,
     willWatch: false
   },
   {
@@ -328,7 +335,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -341,7 +348,7 @@ export const cards = [
     rating: ``,
     countries,
     isFavorite: true,
-    isWatched: false,
+    isWatched: true,
     willWatch: false
   },
   {
@@ -350,7 +357,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -372,7 +379,7 @@ export const cards = [
     releaseYear: getYear(getRandomArrayElement(releaseTimestamps)),
     actors: generateRandomText(actors, ` `),
     description: generateRandomText(descriptions, ``),
-    duration: getHoursMinutes(getRandomArrayElement(durations)),
+    duration: getRandomArrayElement(durations),
     episodes,
     genre: getRandomArrayElement(genres),
     image: getImagePath(getRandomArrayElement(images)),
@@ -385,7 +392,7 @@ export const cards = [
     rating: ``,
     countries,
     isFavorite: true,
-    isWatched: false,
+    isWatched: true,
     willWatch: true
   }
 ];
@@ -397,13 +404,6 @@ export const Filter = {
   [`#favorites`]: `favorites`,
   [`#stats`]: `stats`
 };
-
-export const Control = {
-  [`watchlist`]: `willWatch`,
-  [`watched`]: `isWatched`,
-  [`favorite`]: `isFavorite`
-};
-
 
 export const filters = [
   {

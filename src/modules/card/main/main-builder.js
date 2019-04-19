@@ -1,9 +1,5 @@
+import {getHoursMinutes} from '../../../assets/handler';
 import Main from './main-concreter';
-import {
-  getImagePath,
-  getRandomArrayElement,
-  getHoursMinutes
-} from '../../../assets/handler';
 
 export default (card, container) => {
   const {
@@ -11,10 +7,11 @@ export default (card, container) => {
     duration, genre, image, description
   } = card;
 
+  const durationFormat = getHoursMinutes(duration);
 
   const main = new Main({
     title, ratings, releaseYear,
-    duration, genre, image, description});
+    durationFormat, genre, image, description});
 
   container.appendChild(main.render());
 

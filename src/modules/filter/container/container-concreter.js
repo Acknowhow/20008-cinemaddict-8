@@ -26,6 +26,7 @@ export default class Container extends Component {
   }
 
   _partialUpdate() {
+    this._element.innerHTML = this.template;
 
   }
 
@@ -63,7 +64,11 @@ export default class Container extends Component {
     this._element.removeEventListener(`click`, this._onFilterButtonClick);
   }
 
-  update() {
+  update(filters) {
+    this._filters = filters;
 
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
   }
 }
