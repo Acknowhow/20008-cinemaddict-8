@@ -8,9 +8,9 @@ export default class Main extends Component {
     this._title = data.title;
     this._ratings = data.ratings;
     this._releaseYear = data.releaseYear;
-    this._duration = data.duration;
+    this._duration = data.durationFormat;
     this._genre = data.genre;
-    this._src = data.src;
+    this._image = data.image;
     this._description = data.description;
   }
 
@@ -24,7 +24,7 @@ export default class Main extends Component {
           <span class="film-card__duration">${this._duration}</span>
           <span class="film-card__genre">${this._genre}</span>
         </p>
-        <img src="${this._src}" alt="" class="film-card__poster">
+        <img src="${this._image}" alt="" class="film-card__poster">
         <p class="film-card__description">${this._description}</p>
       </div>`;
   }

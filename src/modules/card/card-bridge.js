@@ -1,42 +1,34 @@
-import {card, filters} from '../../data';
-
 import CardContainer from './container/container-concreter';
 import PopupContainer from './../popup/container/container-concreter';
 
 import buildMain from './main/main-builder';
-import buildFilter from './../filter/filter-builder';
-
 import buildInfo from './../popup/info/info-builder';
 import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
 
-import {getRandomArrayElement} from '../../assets/handler';
 import {manufacture} from '../../assets/factory';
 
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
 
-const filtersContainer = body.querySelector(
-    `.main-navigation`);
+export default (cards) => {
+  cardsContainer.innerHTML = ``;
 
-export default () => {
-  buildFilter(filters, filtersContainer);
+  const renderCards = () => {
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
 
-  filtersContainer.addEventListener(`click`, (e) => {
-    const {target} = e;
-
-    if (target.tagName.toUpperCase() === `A`) {
       let main;
       let producedPopupBuilders = [];
 
-      const {comments, titles, images} = card;
-
-      const src = getRandomArrayElement(images);
-      const title = getRandomArrayElement(titles);
+      const {
+        comments, title, image,
+        isFavorite, isWatched, willWatch} = card;
 
       const cardContainer = new CardContainer(comments);
-      const popupContainer = new PopupContainer(src, title);
+      const popupContainer = new PopupContainer(
+        {image, title, isFavorite, isWatched, willWatch});
 
       const formSubmission = (evt) => {
         if (evt.ctrlKey === true && evt.keyCode === 13) {
@@ -44,8 +36,7 @@ export default () => {
           popupContainer.onSubmit = (newData) => {
 
             card.comments.push(newData);
-
-            cardContainer.update(card)
+            cardContainer.update(card);
 
             body.removeEventListener('keydown', formSubmission);
             body.removeChild(popupContainer.element);
@@ -60,7 +51,6 @@ export default () => {
       ];
 
       cardsContainer.appendChild(cardContainer.render());
-
       main = buildMain(card, cardContainer.element);
 
       cardContainer.onComments = () => {
@@ -75,6 +65,15 @@ export default () => {
         cardContainer.unbind();
       };
 
+      popupContainer.onControls = (target) => {
+        card.isWatched = target.isWatched;
+        card.willWatch = target.willWatch;
+        card.isFavorite = target.isFavorite;
+
+        popupContainer.update(card);
+
+      };
+
       popupContainer.onClose = () => {
         cardContainer.bind();
 
@@ -83,5 +82,17 @@ export default () => {
         popupContainer.unrender();
       };
     }
-  });
-};
+  };
+  renderCards();
+}
+
+
+
+
+
+
+
+
+
+
+
