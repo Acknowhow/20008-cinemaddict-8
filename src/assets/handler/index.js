@@ -2,6 +2,18 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duration-format';
 momentDurationFormatSetup(moment);
 
+export const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
+export const toJSON = (response) => {
+  return response.json();
+};
+
 const getHistoryList = (cards) => {
   return cards.filter((it) => it.isWatched === true);
 };
