@@ -3,12 +3,13 @@ import {ratings} from '../../../data';
 
 export default (card, container) => {
 
+  const {rating} = card;
   const ratingContainer = container.querySelector(`
       .film-details__user-rating-score`);
 
-  const rating = new Rating(ratings);
-  ratingContainer.appendChild(rating.render());
+  const ratingConcrete = new Rating(rating, ratings);
+  ratingContainer.appendChild(ratingConcrete.render());
 
-  return rating;
+  return ratingConcrete;
 };
 

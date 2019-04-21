@@ -28,20 +28,18 @@ export default class Container extends Component {
         'comment': ``,
         'emotion': ``
       },
-      [`user_details`]: {
-        'rating': ``
-      }
+      'rating': null
     };
 
-    const ContainerMapper = Container.createMapper(entry);
+    const FormMapper = Container.formMapper(entry);
 
     for (const pair of formData.entries()) {
 
       const [property, value] = pair;
-      if (ContainerMapper[property]) {
+      if (FormMapper[property]) {
 
         value.trim();
-        ContainerMapper[property](value);
+        FormMapper[property](value);
       }
     }
 
@@ -96,11 +94,9 @@ export default class Container extends Component {
     e.preventDefault();
 
     const entry = {
-      [`user_details`]: {
-        willWatch: this._willWatch,
-        isWatched: this._isWatched,
-        isFavorite: this._isFavorite
-      }
+      willWatch: this._willWatch,
+      isWatched: this._isWatched,
+      isFavorite: this._isFavorite
     };
     const {target} = e;
 
@@ -111,9 +107,9 @@ export default class Container extends Component {
       const controlInput = this._element.querySelector(`#${controlValue}`);
 
       const ContainerIsChecked = Container.getInputStatus(controlInput);
-      const ContainerMapper = Container.createMapper(entry);
+      const StateMapper = Container.stateMapper(entry);
 
-      ContainerMapper[controlValue](ContainerIsChecked);
+      StateMapper[controlValue](ContainerIsChecked);
 
       this._onControls(entry);
     }
@@ -207,14 +203,19 @@ export default class Container extends Component {
       .removeEventListener(`click`, this._onControlsButtonClick);
   }
 
-  static createMapper(target) {
+  static stateMapper(target) {
+    return {
+      watchlist: (value) => target.willWatch = value,
+      watched: (value) => target.isWatched = value,
+      favorite: (value) => target.isFavorite = value
+    }
+  }
+
+  static formMapper(target) {
     return {
       [`comment-emoji`]: (value) => target.comments[`emotion`] = value,
       comment: (value) => target.comments.comment = value.trim(),
-      score: (value) => target.comments.rating = value,
-      watchlist: (value) => target[`user_details`].willWatch = value,
-      watched: (value) => target[`user_details`].isWatched = value,
-      favorite: (value) => target[`user_details`].isFavorite = value
+      score: (value) => target.rating = value,
     }
   }
 

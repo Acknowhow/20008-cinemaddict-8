@@ -36,6 +36,7 @@ export default class ModelCard {
         'date': this.comments.date,
       },
       [`user_details`]: {
+        'personal_rating': this.rating,
         'favorite': this.isFavorite,
         'already_watched': this.isWatched,
         'watchlist': this.willWatch

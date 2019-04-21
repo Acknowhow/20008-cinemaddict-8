@@ -38,8 +38,6 @@ export default (cards, Api) => {
           popupContainer.onSubmit = (newData) => {
 
             console.log(newData);
-            // card.comments.push(newData);
-            // cardContainer.update(card);
 
             body.removeEventListener('keydown', formSubmission);
             body.removeChild(popupContainer.element);
@@ -69,9 +67,11 @@ export default (cards, Api) => {
       };
 
       popupContainer.onControls = (target) => {
-        card.isWatched = target[`user_details`].isWatched;
-        card.willWatch = target[`user_details`].willWatch;
-        card.isFavorite = target[`user_details`].isFavorite;
+        console.log(target);
+
+        card.isWatched = target.isWatched;
+        card.willWatch = target.willWatch;
+        card.isFavorite = target.isFavorite;
 
         popupContainer.update(card);
       };
