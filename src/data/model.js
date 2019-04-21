@@ -6,7 +6,7 @@ export default class ModelCard {
     this.originalTitle = data[`film_info`][`alternative_title`];
     this.description = data[`film_info`][`description`];
     this.director = data[`film_info`][`director`];
-    this.genre = data[`film_info`][`genre`];
+    this.genre = data[`film_info`][`genre`] || [];
     this.image = data[`film_info`][`poster`];
     this.releaseDate = data[`film_info`][`release`][`date`];
     this.country = data[`film_info`][`release`][`release_country`];
@@ -30,10 +30,10 @@ export default class ModelCard {
     return {
       'id': this.id,
       'comments': {
-        'author': this.author,
-        'emotion': this.emotion,
-        'comment': this.comment,
-        'date': this.commentDate,
+        'author': this.comments.author,
+        'emotion': this.comments.emotion,
+        'comment': this.comments.comment,
+        'date': this.comments.date,
       },
       [`user_details`]: {
         'favorite': this.isFavorite,

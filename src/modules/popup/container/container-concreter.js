@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Component from '../../../assets/concreter';
 
 export default class Container extends Component {
@@ -21,8 +22,15 @@ export default class Container extends Component {
 
   _processForm(formData) {
     const entry = {
-      score: null,
-      comment: ``
+      'comments': {
+        'author': this._element.querySelector(`.film-details__comment-author`).innerHTML,
+        'date': moment().valueOf(),
+        'comment': ``,
+        'emotion': ``
+      },
+      [`user_details`]: {
+        'rating': ``
+      }
     };
 
     const ContainerMapper = Container.createMapper(entry);
@@ -88,9 +96,11 @@ export default class Container extends Component {
     e.preventDefault();
 
     const entry = {
-      willWatch: this._willWatch,
-      isWatched: this._isWatched,
-      isFavorite: this._isFavorite
+      [`user_details`]: {
+        willWatch: this._willWatch,
+        isWatched: this._isWatched,
+        isFavorite: this._isFavorite
+      }
     };
     const {target} = e;
 
@@ -199,12 +209,12 @@ export default class Container extends Component {
 
   static createMapper(target) {
     return {
-      [`comment-emoji`]: (value) => target[`comment-emoji`] = value,
-      comment: (value) => target.comment = value,
-      score: (value) => target.score = value,
-      watchlist: (value) => target.willWatch = value,
-      watched: (value) => target.isWatched = value,
-      favorite: (value) => target.isFavorite = value
+      [`comment-emoji`]: (value) => target.comments[`emotion`] = value,
+      comment: (value) => target.comments.comment = value.trim(),
+      score: (value) => target.comments.rating = value,
+      watchlist: (value) => target[`user_details`].willWatch = value,
+      watched: (value) => target[`user_details`].isWatched = value,
+      favorite: (value) => target[`user_details`].isFavorite = value
     }
   }
 

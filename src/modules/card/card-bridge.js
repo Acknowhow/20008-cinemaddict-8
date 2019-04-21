@@ -12,12 +12,14 @@ const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
 
-export default (cards) => {
+export default (cards, Api) => {
   cardsContainer.innerHTML = ``;
 
-  const renderCards = () => {
-    for (let i = 0; i < cards.length; i++) {
-      const card = cards[i];
+  const renderCards = (updatedCards = null) => {
+    const activeCards = updatedCards || cards;
+
+    for (let i = 0; i < activeCards.length; i++) {
+      const card = activeCards[i];
 
       let main;
       let producedPopupBuilders = [];
@@ -35,8 +37,9 @@ export default (cards) => {
 
           popupContainer.onSubmit = (newData) => {
 
-            card.comments.push(newData);
-            cardContainer.update(card);
+            console.log(newData);
+            // card.comments.push(newData);
+            // cardContainer.update(card);
 
             body.removeEventListener('keydown', formSubmission);
             body.removeChild(popupContainer.element);
@@ -66,12 +69,11 @@ export default (cards) => {
       };
 
       popupContainer.onControls = (target) => {
-        card.isWatched = target.isWatched;
-        card.willWatch = target.willWatch;
-        card.isFavorite = target.isFavorite;
+        card.isWatched = target[`user_details`].isWatched;
+        card.willWatch = target[`user_details`].willWatch;
+        card.isFavorite = target[`user_details`].isFavorite;
 
         popupContainer.update(card);
-
       };
 
       popupContainer.onClose = () => {

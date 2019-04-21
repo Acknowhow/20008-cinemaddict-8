@@ -1,5 +1,5 @@
 import API from '../../api'
-import {cards, filters} from '../../data';
+import {filters} from '../../data';
 import chart from '../../assets/chart';
 import {
   getCardsByGenreCounted,
@@ -15,7 +15,7 @@ import {
 } from '../../assets/handler';
 
 import concreteStatistic from './../statistic/statistic-concreter';
-import buildCard from './card-bridge';
+import bridgeCard from './card-bridge';
 import buildFilterContainer from '../filter/container/container-builder';
 
 const body = document.querySelector(`body`);
@@ -35,11 +35,12 @@ export default () => {
   Api.getCards()
     .then((loadedCards) => {
 
+      console.log(loadedCards);
       const filterContainer = buildFilterContainer(
         main, getFiltersState(loadedCards, filters));
 
       filterContainer.onFilter = (target) => {
-        const filteredCards = getFilteredCards(cards, target);
+        const filteredCards = getFilteredCards(loadedCards, target);
 
         if (typeof filteredCards !== `string`) {
 
@@ -51,9 +52,9 @@ export default () => {
             statistic.classList.add(`visually-hidden`);
             statisticFilters.classList.add(`visually-hidden`);
           }
+          filterContainer.update(getFiltersState(loadedCards, filters));
 
-          filterContainer.update(getFiltersState(cards, filters));
-          buildCard(filteredCards);
+          bridgeCard(filteredCards, Api);
         } else {
 
           statisticList.innerHTML = ``;
@@ -64,15 +65,15 @@ export default () => {
           }
 
 
-          const cardsByGenreCounted = getCardsByGenreCounted(getCardsByGenre(cards));
+          const cardsByGenreCounted = getCardsByGenreCounted(getCardsByGenre(loadedCards));
 
           const {
             genresArray,
             genresCountArray
           } = getCardsByGenreSorted(cardsByGenreCounted);
 
-          const watchedCardsTotalCount = getWatchedCardsTotalCount(cards);
-          const cardsTotalDuration = getCardsTotalDuration(cards);
+          const watchedCardsTotalCount = getWatchedCardsTotalCount(loadedCards);
+          const cardsTotalDuration = getCardsTotalDuration(loadedCards);
 
           const hoursValue = getHoursValue(cardsTotalDuration);
           const minutesValue = getMinutesValue(cardsTotalDuration);
@@ -87,6 +88,6 @@ export default () => {
         }
       };
 
-      buildCard(cards);
+      bridgeCard(loadedCards, Api);
     });
 };
