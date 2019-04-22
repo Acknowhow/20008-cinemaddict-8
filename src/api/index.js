@@ -18,11 +18,11 @@ export default class API {
 
   updateCard({id, data}) {
     return this._load({
-        url: `movies/${id}`,
-        method: Method.PUT,
-        body: JSON.stringify(data),
-        headers: new Headers({'Content-Type': `application/json`})
-      })
+      url: `movies/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
       .then(toJSON)
       .then(ModelCard.parseCard);
   }

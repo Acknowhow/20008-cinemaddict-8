@@ -56,7 +56,7 @@ export default class ModelCard {
         [`watching_date`]: this.willWatchDate
       }
 
-    }
+    };
   }
 
   static parseCard(data) {
