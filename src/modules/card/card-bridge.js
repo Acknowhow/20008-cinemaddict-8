@@ -34,11 +34,6 @@ export default (cards, Api) => {
         {image, title, isFavorite, isWatched, willWatch});
 
       const formSubmission = (evt) => {
-        if (popupContainer.element.querySelector(`.film-details__add-emoji`).disabled === true ||
-           popupContainer.element.querySelector(`.film-details__comment-input`).disabled === true) {
-
-          return;
-        }
         if (evt.ctrlKey === true && evt.keyCode === 13) {
 
           popupContainer.onSubmit = (newData) => {
@@ -49,19 +44,27 @@ export default (cards, Api) => {
 
             card.comments.push(newData.comment);
 
-            Api.updateCard({id: 33, data: card.toRAW()}).then(
-              (newCard) => cardContainer.update(newCard)
-            )
+            Api.updateCard({id: card.id, data: card.toRAW()})
               .then((result) => load(result))
-              .then(() => {
+
+              .then((result) => {
+                const comment = producedPopupBuilders.find((it) => it[`comment`]);
+
                 unblock(popupContainer,
                   `.film-details__comment-input`,
                   `comment`, true);
+
+                cardContainer.update(result);
+                comment[`comment`].update(card);
+
               })
+              .then(stopLoader)
               .catch(() => {
 
+                card.comments.pop();
                 popupContainer.shake();
-                unblock(popupContainer, `.film-details__comment-input`,`comment`, false);
+                unblock(popupContainer, `.film-details__comment-input`,
+                  `comment`, false);
               });
 
             // body.removeEventListener('keydown', formSubmission);

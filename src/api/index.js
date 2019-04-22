@@ -37,7 +37,6 @@ export default class API {
         error(method);
 
         throw err;
-
       });
   }
 }

@@ -47,6 +47,11 @@ export default class Comment extends Component {
     return array;
   }
 
+  _partialUpdate() {
+    this._element.innerHTML = ``;
+    this._element.innerHTML = this.template;
+  }
+
   get template() {
     return `
       <div>
@@ -70,5 +75,11 @@ export default class Comment extends Component {
           </label>
         </div>
       </div>`;
+  }
+
+  update(data) {
+    this._comments = data.comments;
+
+    this._partialUpdate();
   }
 }

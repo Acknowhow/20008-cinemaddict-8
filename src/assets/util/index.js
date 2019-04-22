@@ -32,9 +32,9 @@ export const error = (method) => {
   }
 };
 
-export const load = (isSuccess) => {
+export const load = (result) => {
   return new Promise((resolve, reject) => {
-    setTimeout(isSuccess ? resolve : reject, 2000)
+    setTimeout(result ? resolve(result) : reject, 2000)
   });
 };
 

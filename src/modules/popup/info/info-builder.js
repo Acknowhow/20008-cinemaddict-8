@@ -21,5 +21,5 @@ export default (card, container) => {
     country, durationFormat, releaseDateFormat});
   infoContainer.appendChild(info.render());
 
-  return info;
+  return {info};
 }
