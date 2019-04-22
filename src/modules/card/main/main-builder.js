@@ -1,16 +1,17 @@
-import {getHoursMinutes} from '../../../assets/handler';
+import {getHoursMinutes, getYear} from '../../../assets/handler';
 import Main from './main-concreter';
 
 export default (card, container) => {
   const {
-    title, ratings, releaseYear,
+    title, overallRating, releaseDate,
     duration, genre, image, description
   } = card;
 
   const durationFormat = getHoursMinutes(duration);
+  const releaseYear = getYear(releaseDate);
 
   const main = new Main({
-    title, ratings, releaseYear,
+    title, overallRating, releaseYear,
     durationFormat, genre, image, description});
 
   container.appendChild(main.render());

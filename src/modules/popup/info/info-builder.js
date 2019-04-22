@@ -1,25 +1,25 @@
+import moment from 'moment';
 import Info from './info-concreter';
-import {
-  getAverageRating,
-  getRandomArrayElement,
-  getHoursMinutes} from '../../../assets/handler';
+import {getHoursMinutes} from '../../../assets/handler';
 
 export default (card, container) => {
   const {
-    audiences, title, ratings,
-    actors, description, duration
+    audience, title, overallRating,
+    rating, actors, description, duration,
+    genre, director, writers, releaseDate, country
   } = card;
 
   const infoContainer = container.querySelector(`.film-details__info-wrap`);
 
-  const audience = getRandomArrayElement(audiences);
-  const averageRating = getAverageRating(ratings);
   const durationFormat = getHoursMinutes(duration);
+  const releaseDateFormat = moment(`${releaseDate}`, `x`)
+    .format(`MMMM D YYYY`);
 
   const info = new Info({
-    audience, title, averageRating,
-    actors, description, durationFormat});
+    audience, title, overallRating, rating,
+    genre, director, writers, actors, description,
+    country, durationFormat, releaseDateFormat});
   infoContainer.appendChild(info.render());
 
-  return info;
+  return {info};
 }

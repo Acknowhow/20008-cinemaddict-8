@@ -8,5 +8,5 @@ export default (card, container) => {
   const comment = new Comment(comments);
 
   commentContainer.appendChild(comment.render());
-  return comment;
+  return {comment};
 };

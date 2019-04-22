@@ -2,6 +2,18 @@ import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duration-format';
 momentDurationFormatSetup(moment);
 
+export const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
+export const toJSON = (response) => {
+  return response.json();
+};
+
 const getHistoryList = (cards) => {
   return cards.filter((it) => it.isWatched === true);
 };
@@ -20,6 +32,34 @@ const getArrayMax = (array) => {
   })
 };
 
+export const getCommentDate = (timeStamp) => {
+  const currentTimestamp = moment().valueOf();
+  const difference = currentTimestamp - timeStamp;
+
+  const duration = moment.duration(difference, `milliseconds`);
+
+  if (duration.asYears() >= 1) {
+    return duration.format(`Y [years] M [months] D [days]`);
+  }
+
+  if (duration.asMonths() >= 1) {
+    return duration.format(`M [months] d [days]`);
+  }
+
+  if (duration.asDays() >= 1) {
+    return duration.format(`d [days]`);
+  }
+  if (duration.asHours() >= 1) {
+    return duration.format(`hh [hours] mm [minutes]`);
+  }
+
+  if (duration.asMinutes() >= 1) {
+    return duration.format(`mm [minutes]`);
+  }
+
+  return duration.format(`ss [seconds]`);
+};
+
 export const getHoursValue = (string) => {
   return [...string].slice(
     0, string.indexOf(`h`)).join(``);
@@ -29,33 +69,6 @@ export const getMinutesValue = (string) => {
   const startIndex = string.indexOf(` `) + 1;
   return [...string].slice(
     startIndex, string.indexOf(`m`)).join(``);
-};
-
-export const getRandomIntInclusive = (min, max) => {
-  const minCeil = Math.ceil(min);
-  const maxFloor = Math.floor(max);
-
-  return Math.floor(Math.random() * (maxFloor - minCeil + 1)) + minCeil;
-};
-
-export const getRandomArrayElement = (array) => {
-  return array[getRandomIntInclusive(0, array.length - 1)];
-};
-
-export const generateRandomText = (array, delimeter) => {
-  const clonedArray = [...array];
-
-  const randomIndex = getRandomIntInclusive(0, clonedArray.length - 1);
-  const randomDeleteCount = getRandomIntInclusive(1, 3);
-
-  return clonedArray.splice(randomIndex, randomDeleteCount).join(delimeter);
-};
-
-export const getAverageRating = (array) => {
-  const clonedArray = [...array];
-
-  const sum = clonedArray.reduce((acc, index) => acc + index);
-  return (sum / clonedArray.length).toFixed(1);
 };
 
 export const getHoursMinutes = (minutes) => {
@@ -107,10 +120,6 @@ export const getCardsTopGenre = (object) => {
 
 export const getYear = (timestamp) => {
   return new Date(timestamp).getFullYear();
-};
-
-export const getImagePath = (image) => {
-  return `./images/posters/${image}`;
 };
 
 export const getFilteredCards = (cards, filterName) => {

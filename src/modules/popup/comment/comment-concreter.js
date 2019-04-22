@@ -1,3 +1,5 @@
+import {getCommentDate} from '../../../assets/handler';
+
 import Component from '../../../assets/concreter';
 import {Comments} from '../../../data';
 
@@ -5,13 +7,12 @@ export default class Comment extends Component {
   constructor(comments) {
     super();
     this._comments = comments;
-
   }
 
   _getUserComments() {
 
     return this._comments.map((value, key) => {
-      const emoji = this._comments[key][`comment-emoji`];
+      const emoji = this._comments[key][`emotion`];
 
       return `
         <li class="film-details__comment">
@@ -19,8 +20,8 @@ export default class Comment extends Component {
           <div>
             <p class="film-details__comment-text">${this._comments[key][`comment`]}</p>
             <p class="film-details__comment-info">
-              <span class="film-details__comment-author">Tim Macoveev</span>
-              <span class="film-details__comment-day">3 days ago</span>
+              <span class="film-details__comment-author">${this._comments[key][`author`]}</span>
+              <span class="film-details__comment-day">${getCommentDate(this._comments[key][`date`])} ago</span>
             </p>
           </div>
         </li>`
@@ -38,11 +39,16 @@ export default class Comment extends Component {
           type="radio" 
           id="emoji-${key}" 
           value="${key}"
+          ${key === `neutral-face` ? `checked` : ``}
           >
         <label class="film-details__emoji-label" for="emoji-${key}">${value}</label>`)
     }
 
     return array;
+  }
+
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
   }
 
   get template() {
@@ -70,7 +76,9 @@ export default class Comment extends Component {
       </div>`;
   }
 
-  bind() {
-    // Bind Ctrl + Enter
+  update(data) {
+    this._comments = data.comments;
+
+    this._partialUpdate();
   }
 }

@@ -7,17 +7,20 @@ import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
 
 import {manufacture} from '../../assets/factory';
+import {loader, block, unblock, load} from '../../assets/util/';
 
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
 
-export default (cards) => {
+export default (cards, Api) => {
   cardsContainer.innerHTML = ``;
 
-  const renderCards = () => {
-    for (let i = 0; i < cards.length; i++) {
-      const card = cards[i];
+  const renderCards = (updatedCards = null) => {
+    const activeCards = updatedCards || cards;
+
+    for (let i = 0; i < activeCards.length; i++) {
+      const card = activeCards[i];
 
       let main;
       let producedPopupBuilders = [];
@@ -34,15 +37,34 @@ export default (cards) => {
         if (evt.ctrlKey === true && evt.keyCode === 13) {
 
           popupContainer.onSubmit = (newData) => {
+            const stopLoader = loader();
 
-            card.comments.push(newData);
-            cardContainer.update(card);
+            block(popupContainer, `.film-details__comment-input`, `comment`);
 
-            body.removeEventListener('keydown', formSubmission);
-            body.removeChild(popupContainer.element);
+            card.comments.push(newData.comment);
 
-            popupContainer.unrender();
-          }
+            Api.updateCard({id: card.id, data: card.toRAW()})
+              .then((newCard) => load(newCard))
+
+              .then((newCard) => {
+                const comment = producedPopupBuilders.find((it) => it[`comment`]);
+
+                unblock(popupContainer,
+                  `.film-details__comment-input`,
+                  `comment`, true);
+
+                cardContainer.update(newCard);
+                comment[`comment`].update(newCard);
+
+              })
+              .then(stopLoader)
+              .catch(() => {
+
+                popupContainer.shake();
+                unblock(popupContainer, `.film-details__comment-input`,
+                  `comment`, false);
+              });
+          };
         }
       };
 
@@ -65,13 +87,41 @@ export default (cards) => {
         cardContainer.unbind();
       };
 
+      popupContainer.onRating = (data) => {
+        const stopLoader = loader();
+
+        block(popupContainer, `.film-details__user-rating-score`, `rating`);
+        card.rating = data.rating;
+
+        Api.updateCard({id: card.id, data: card.toRAW()})
+          .then((newCard) => load(newCard))
+
+          .then((newCard) => {
+            const rating = producedPopupBuilders.find((it) => it[`rating`]);
+
+            unblock(popupContainer,
+              `.film-details__user-rating-score`,
+              `rating`, true);
+
+            rating[`rating`].update(newCard);
+          })
+          .then(stopLoader)
+          .catch(() => {
+
+            popupContainer.shake();
+            unblock(popupContainer, `.film-details__user-rating-score`,
+              `rating`, false);
+          });
+
+      };
+
       popupContainer.onControls = (target) => {
+
         card.isWatched = target.isWatched;
         card.willWatch = target.willWatch;
         card.isFavorite = target.isFavorite;
 
         popupContainer.update(card);
-
       };
 
       popupContainer.onClose = () => {
@@ -85,7 +135,6 @@ export default (cards) => {
   };
   renderCards();
 }
-
 
 
 

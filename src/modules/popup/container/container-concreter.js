@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Component from '../../../assets/concreter';
 
 export default class Container extends Component {
@@ -14,26 +15,32 @@ export default class Container extends Component {
     this._onClose = null;
     this._onSubmit = null;
     this._onControls = null;
+    this._onRating = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onControlsButtonClick = this._onControlsButtonClick.bind(this);
+    this._onRatingButtonClick = this._onRatingButtonClick.bind(this);
   }
 
   _processForm(formData) {
     const entry = {
-      score: null,
-      comment: ``
+      'comment': {
+        'author': this._element.querySelector(`.film-details__comment-author`).innerHTML,
+        'date': moment().valueOf(),
+        'comment': ``,
+        'emotion': ``,
+      }
     };
 
-    const ContainerMapper = Container.createMapper(entry);
+    const FormMapper = Container.formMapper(entry);
 
     for (const pair of formData.entries()) {
 
       const [property, value] = pair;
-      if (ContainerMapper[property]) {
+      if (FormMapper[property]) {
 
         value.trim();
-        ContainerMapper[property](value);
+        FormMapper[property](value);
       }
     }
 
@@ -44,7 +51,7 @@ export default class Container extends Component {
     let markup;
 
     if (this._isWatched) {
-      markup = `<span class="film-details__watched-status film-details__watched-status&#45;&#45;active">Already watched</span>`
+      markup = `<span class="film-details__watched-status film-details__watched-status&#45;&#45;active">Already watched</span>`;
     }
     if (this._willWatch && !this._isWatched) {
 
@@ -64,14 +71,6 @@ export default class Container extends Component {
     controls.insertAdjacentHTML(`afterbegin`, this._getWatchStatus());
   }
 
-  _onCloseButtonClick(e) {
-    e.preventDefault();
-
-    if (typeof this._onClose === `function`) {
-      this._onClose();
-    }
-  }
-
   _onSubmitAction() {
 
     const formData = new FormData(
@@ -83,6 +82,37 @@ export default class Container extends Component {
       this._onSubmit(newData);
     }
   }
+
+  _onCloseButtonClick(e) {
+    e.preventDefault();
+
+    if (typeof this._onClose === `function`) {
+      this._onClose();
+    }
+  }
+
+  _onRatingButtonClick(e) {
+    e.preventDefault();
+
+    const entry = {
+      rating: null
+    };
+
+    const {target} = e;
+
+    if (typeof this._onRating === `function` &&
+      target.tagName.toUpperCase() === `LABEL`) {
+
+      const ratingValue = target.attributes[`for`].nodeValue;
+      const ratingInput = this._element.querySelector(`#${ratingValue}`);
+
+      entry.rating = parseInt(ratingInput.value, 10);
+      ratingInput.checked = true;
+
+      this._onRating(entry);
+    }
+  }
+
 
   _onControlsButtonClick(e) {
     e.preventDefault();
@@ -101,12 +131,16 @@ export default class Container extends Component {
       const controlInput = this._element.querySelector(`#${controlValue}`);
 
       const ContainerIsChecked = Container.getInputStatus(controlInput);
-      const ContainerMapper = Container.createMapper(entry);
+      const StateMapper = Container.stateMapper(entry);
 
-      ContainerMapper[controlValue](ContainerIsChecked);
+      StateMapper[controlValue](ContainerIsChecked);
 
       this._onControls(entry);
     }
+  }
+
+  set onRating(fn) {
+    this._onRating = fn;
   }
 
   set onClose(fn) {
@@ -187,6 +221,9 @@ export default class Container extends Component {
 
     this._element.querySelector(`.film-details__controls`)
       .addEventListener(`click`, this._onControlsButtonClick);
+
+    this._element.querySelector(`.film-details__user-rating-score`)
+      .addEventListener(`click`, this._onRatingButtonClick);
   }
 
   unbind() {
@@ -195,16 +232,24 @@ export default class Container extends Component {
 
     this._element.querySelector(`.film-details__controls`)
       .removeEventListener(`click`, this._onControlsButtonClick);
+
+    this._element.querySelector(`.film-details__user-rating-score`)
+      .removeEventListener(`click`, this._onRatingButtonClick);
   }
 
-  static createMapper(target) {
+
+  static stateMapper(target) {
     return {
-      [`comment-emoji`]: (value) => target[`comment-emoji`] = value,
-      comment: (value) => target.comment = value,
-      score: (value) => target.score = value,
       watchlist: (value) => target.willWatch = value,
       watched: (value) => target.isWatched = value,
       favorite: (value) => target.isFavorite = value
+    }
+  }
+
+  static formMapper(target) {
+    return {
+      [`comment-emoji`]: (value) => target.comment[`emotion`] = value,
+      comment: (value) => target.comment.comment = value.trim(),
     }
   }
 
@@ -221,6 +266,15 @@ export default class Container extends Component {
       isChecked = true;
     }
     return isChecked;
+  }
+
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``
+    }, ANIMATION_TIMEOUT);
   }
 
   update(data) {
