@@ -37,7 +37,6 @@ export default (cards, Api) => {
         if (evt.ctrlKey === true && evt.keyCode === 13) {
 
           popupContainer.onSubmit = (newData) => {
-
             const stopLoader = loader();
 
             block(popupContainer, `.film-details__comment-input`, `comment`);
@@ -45,32 +44,26 @@ export default (cards, Api) => {
             card.comments.push(newData.comment);
 
             Api.updateCard({id: card.id, data: card.toRAW()})
-              .then((result) => load(result))
+              .then((newCard) => load(newCard))
 
-              .then((result) => {
+              .then((newCard) => {
                 const comment = producedPopupBuilders.find((it) => it[`comment`]);
 
                 unblock(popupContainer,
                   `.film-details__comment-input`,
                   `comment`, true);
 
-                cardContainer.update(result);
-                comment[`comment`].update(card);
+                cardContainer.update(newCard);
+                comment[`comment`].update(newCard);
 
               })
               .then(stopLoader)
               .catch(() => {
 
-                card.comments.pop();
                 popupContainer.shake();
                 unblock(popupContainer, `.film-details__comment-input`,
                   `comment`, false);
               });
-
-            // body.removeEventListener('keydown', formSubmission);
-            // body.removeChild(popupContainer.element);
-
-            // popupContainer.unrender();
           };
         }
       };
@@ -81,7 +74,6 @@ export default (cards, Api) => {
 
       cardsContainer.appendChild(cardContainer.render());
       main = buildMain(card, cardContainer.element);
-
 
       cardContainer.onComments = () => {
         popupContainer.render();
@@ -96,7 +88,30 @@ export default (cards, Api) => {
       };
 
       popupContainer.onRating = (data) => {
-        console.log(data);
+        const stopLoader = loader();
+
+        block(popupContainer, `.film-details__user-rating-score`, `rating`);
+        card.rating = data.rating;
+
+        Api.updateCard({id: card.id, data: card.toRAW()})
+          .then((newCard) => load(newCard))
+
+          .then((newCard) => {
+            const rating = producedPopupBuilders.find((it) => it[`rating`]);
+
+            unblock(popupContainer,
+              `.film-details__user-rating-score`,
+              `rating`, true);
+
+            rating[`rating`].update(newCard);
+          })
+          .then(stopLoader)
+          .catch(() => {
+
+            popupContainer.shake();
+            unblock(popupContainer, `.film-details__user-rating-score`,
+              `rating`, false);
+          });
 
       };
 

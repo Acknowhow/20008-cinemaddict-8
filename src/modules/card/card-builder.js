@@ -27,7 +27,7 @@ const statisticFilters = main.querySelector(`.statistic__filters`);
 const statisticCtx = main.querySelector(`.statistic__chart`);
 const statisticList = main.querySelector(`.statistic__text-list`);
 
-const AUTHORIZATION = `Basic eo0w590ik298895646510=${Math.random()}`;
+const AUTHORIZATION = `Basic eo0w590ik298895646510=}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/moowle`;
 
 const Api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});

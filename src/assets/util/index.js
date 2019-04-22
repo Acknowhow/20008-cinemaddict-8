@@ -33,6 +33,7 @@ export const error = (method) => {
 };
 
 export const load = (result) => {
+  console.log(result)
   return new Promise((resolve, reject) => {
     setTimeout(result ? resolve(result) : reject, 2000)
   });
@@ -45,7 +46,16 @@ export const block = (component, selector, flag) => {
     component.element.querySelector(`.film-details__add-emoji`).disabled = true;
     component.element.querySelector(`.film-details__comment-input`).disabled = true;
     field.style.border = `none`;
+  }
+  if (flag === `rating`) {
+    field.style.pointerEvents = `none`;
 
+    const labels = [...component.element.querySelectorAll(`.film-details__user-rating-label`)];
+
+    for (const label of labels) {
+      label.style.backgroundColor = `#d8d8d8`;
+
+    }
   }
   component.element.querySelector(`.film-details__inner`).style.border = `1px solid #DC143C`;
   field.disabled = true;
@@ -62,6 +72,24 @@ export const unblock = (component, selector, flag, success) => {
   if (flag === `comment` && success === false) {
     field.style.border = `1px solid #DC143C`;
   }
+
+  if (flag === `rating`) {
+    field.style.pointerEvents = `auto`;
+  }
+
+  if (flag === `rating` && success === false) {
+    component.element.querySelector(`
+    .film-details__user-rating-input:checked + .film-details__user-rating-label`)
+      .style.backgroundColor = `#DC143C`;
+
+  }
+
+  if (flag === `rating` && success === true) {
+    component.element.querySelector(`
+    .film-details__user-rating-input:checked + .film-details__user-rating-label`)
+      .style.backgroundColor = `#ffe800`;
+  }
+
   component.element.querySelector(`.film-details__inner`).style.border = `none`;
   field.disabled = false;
 };

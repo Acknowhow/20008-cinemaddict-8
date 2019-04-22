@@ -48,7 +48,6 @@ export default class Comment extends Component {
   }
 
   _partialUpdate() {
-    this._element.innerHTML = ``;
     this._element.innerHTML = this.template;
   }
 

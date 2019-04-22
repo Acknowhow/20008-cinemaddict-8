@@ -1,5 +1,4 @@
 import Component from '../../../assets/concreter';
-import {getAverageRating} from '../../../assets/handler';
 
 export default class Main extends Component {
   constructor(data) {

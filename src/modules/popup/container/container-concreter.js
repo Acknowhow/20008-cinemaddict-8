@@ -107,6 +107,7 @@ export default class Container extends Component {
       const ratingInput = this._element.querySelector(`#${ratingValue}`);
 
       entry.rating = parseInt(ratingInput.value, 10);
+      ratingInput.checked = true;
 
       this._onRating(entry);
     }
