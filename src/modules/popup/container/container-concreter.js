@@ -267,6 +267,15 @@ export default class Container extends Component {
     return isChecked;
   }
 
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``
+    }, ANIMATION_TIMEOUT);
+  }
+
   update(data) {
     this._isFavorite = data.isFavorite;
     this._willWatch = data.willWatch;

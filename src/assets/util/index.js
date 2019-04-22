@@ -38,19 +38,30 @@ export const load = (isSuccess) => {
   });
 };
 
-export const block = (component, selector, message) => {
-  const commentField = component.element.querySelector(`.film-details__comment-input`);
-  if (commentField.classList.df)
-  component.element.querySelector(`.card__inner`).style.border = `1px solid #DC143C`;
-  button.innerHTML = `${message}`;
-  button.disabled = true;
-  component.element.querySelector(`.card__text`).disabled = true;
+export const block = (component, selector, flag) => {
+  const field = component.element.querySelector(`${selector}`);
+
+  if (flag === `comment`) {
+    component.element.querySelector(`.film-details__add-emoji`).disabled = true;
+    component.element.querySelector(`.film-details__comment-input`).disabled = true;
+    field.style.border = `none`;
+
+  }
+  component.element.querySelector(`.film-details__inner`).style.border = `1px solid #DC143C`;
+  field.disabled = true;
 };
 
-export const unblock = (component, selector, message) => {
-  const button = component.element.querySelector(`${selector}`);
-  component.element.querySelector(`.card__inner`).style.border = `1px solid #000000`;
-  button.innerHTML = `${message}`;
-  button.disabled = false;
-  component.element.querySelector(`.card__text`).disabled = false;
+export const unblock = (component, selector, flag, success) => {
+  const field = component.element.querySelector(`${selector}`);
+
+  if (flag === `comment`) {
+    component.element.querySelector(`.film-details__add-emoji`).disabled = false;
+    component.element.querySelector(`.film-details__comment-input`).disabled = false;
+  }
+
+  if (flag === `comment` && success === false) {
+    field.style.border = `1px solid #DC143C`;
+  }
+  component.element.querySelector(`.film-details__inner`).style.border = `none`;
+  field.disabled = false;
 };

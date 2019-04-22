@@ -32,19 +32,19 @@ export const filters = [
 
   {
     name: `watchlist`,
-    count: 13,
+    count: null,
     state: false
   },
 
   {
     name: `history`,
-    count: 4,
+    count: null,
     state: false
   },
 
   {
     name: `favorites`,
-    count: 8,
+    count: null,
     state: false
   },
 
