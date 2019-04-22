@@ -36,8 +36,11 @@ export default (cards, Api) => {
         if (evt.ctrlKey === true && evt.keyCode === 13) {
 
           popupContainer.onSubmit = (newData) => {
+            card.comments.push(newData.comment);
 
-            console.log(newData);
+            Api.updateCard({id: card.id, data: card.toRAW()}).then(
+              (newCard) => cardContainer.update(newCard)
+            );
 
             body.removeEventListener('keydown', formSubmission);
             body.removeChild(popupContainer.element);
@@ -54,6 +57,7 @@ export default (cards, Api) => {
       cardsContainer.appendChild(cardContainer.render());
       main = buildMain(card, cardContainer.element);
 
+
       cardContainer.onComments = () => {
         popupContainer.render();
 
@@ -66,8 +70,12 @@ export default (cards, Api) => {
         cardContainer.unbind();
       };
 
+      popupContainer.onRating = (data) => {
+        console.log(data);
+
+      };
+
       popupContainer.onControls = (target) => {
-        console.log(target);
 
         card.isWatched = target.isWatched;
         card.willWatch = target.willWatch;

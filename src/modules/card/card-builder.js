@@ -1,4 +1,5 @@
 import API from '../../api'
+import {loader} from '../../assets/util/';
 import {filters} from '../../data';
 import chart from '../../assets/chart';
 import {
@@ -32,10 +33,10 @@ const END_POINT = `https://es8-demo-srv.appspot.com/moowle`;
 const Api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default () => {
+  const stopLoader = loader();
   Api.getCards()
     .then((loadedCards) => {
 
-      console.log(loadedCards);
       const filterContainer = buildFilterContainer(
         main, getFiltersState(loadedCards, filters));
 
@@ -89,5 +90,6 @@ export default () => {
       };
 
       bridgeCard(loadedCards, Api);
-    });
+    })
+    .then(stopLoader);
 };

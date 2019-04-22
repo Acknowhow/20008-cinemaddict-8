@@ -1,4 +1,5 @@
 import {toJSON, checkStatus} from '../assets/handler';
+import {error} from '../assets/util';
 import ModelCard from '../data/model';
 
 import {Method} from '../data';
@@ -14,16 +15,6 @@ export default class API {
       .then(ModelCard.parseCards);
   }
 
-  createCard({task}) {
-    return this._load({
-        url: `movies`,
-        method: Method.POST,
-        body: JSON.stringify(task),
-        headers: new Headers({'Content-Type': `application/json`})
-      })
-      .then(toJSON)
-      // .then(ModelTask.parseTask);
-  }
 
   updateCard({id, data}) {
     return this._load({
@@ -33,14 +24,7 @@ export default class API {
         headers: new Headers({'Content-Type': `application/json`})
       })
       .then(toJSON)
-      // .then(ModelTask.parseTask);
-  }
-
-  deleteCard(id) {
-    return this._load({
-      url: `movies/${id}`,
-      method: Method.DELETE
-    });
+      .then(ModelCard.parseCard);
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
@@ -48,11 +32,10 @@ export default class API {
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)
-      .catch((err) => {
+      .catch(() => {
 
-        console.error(err);
+        error(method);
 
-        throw err;
       });
   }
 }

@@ -32,6 +32,34 @@ const getArrayMax = (array) => {
   })
 };
 
+export const getCommentDate = (timeStamp) => {
+  const currentTimestamp = moment().valueOf();
+  const difference = currentTimestamp - timeStamp;
+
+  const duration = moment.duration(difference, `milliseconds`);
+
+  if (duration.asYears() >= 1) {
+    return duration.format(`Y [years] M [months] D [days]`);
+  }
+
+  if (duration.asMonths() >= 1) {
+    return duration.format(`M [months] d [days]`);
+  }
+
+  if (duration.asDays() >= 1) {
+    return duration.format(`d [days]`);
+  }
+  if (duration.asHours() >= 1) {
+    return duration.format(`hh [hours] mm [minutes]`);
+  }
+
+  if (duration.asMinutes() >= 1) {
+    return duration.format(`mm [minutes]`);
+  }
+
+  return duration.format(`ss [seconds]`);
+};
+
 export const getHoursValue = (string) => {
   return [...string].slice(
     0, string.indexOf(`h`)).join(``);

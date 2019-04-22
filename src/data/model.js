@@ -13,35 +13,50 @@ export default class ModelCard {
     this.duration = data[`film_info`][`runtime`];
     this.title = data[`film_info`][`title`];
     this.overallRating = data[`film_info`][`total_rating`];
-    this.rating = data[`user_details`][`personal_rating`];
     this.writers = data[`film_info`][`writers`];
 
     this.comments = data[`comments`];
+
+    this.rating = data[`user_details`][`personal_rating`];
 
     this.isWatched = Boolean(data[`user_details`][`already_watched`]);
     this.isFavorite = Boolean(data[`user_details`][`favorite`]);
     this.willWatch = Boolean(data[`user_details`][`watchlist`]);
     this.willWatchDate = data[`user_details`][`watching_date`];
-
-    this.isDone = Boolean(data[`is_done`]);
   }
 
   toRAW() {
     return {
       'id': this.id,
-      'comments': {
-        'author': this.comments.author,
-        'emotion': this.comments.emotion,
-        'comment': this.comments.comment,
-        'date': this.comments.date,
-      },
+      [`film_info`]:
+        {
+          [`actors`]: this.actors,
+          [`age_rating`]: this.audience,
+          [`alternative_title`]: this.originalTitle,
+          [`description`]: this.description,
+          [`director`]: this.director,
+          [`genre`]: this.genre,
+          [`poster`]: this.image,
+          [`release`]: {
+            [`date`]: this.releaseDate,
+            [`release_country`]: this.country
+          },
+          [`runtime`]: this.duration,
+          [`title`]: this.title,
+          [`total_rating`]: this.overallRating,
+          [`writers`]: this.writers
+        },
+      [`comments`]: this.comments,
+
       [`user_details`]: {
-        'personal_rating': this.rating,
-        'favorite': this.isFavorite,
-        'already_watched': this.isWatched,
-        'watchlist': this.willWatch
+        [`personal_rating`]: this.rating,
+        [`already_watched`]: this.isWatched,
+        [`favorite`]: this.isFavorite,
+        [`watchlist`]: this.willWatch,
+        [`watching_date`]: this.willWatchDate
       }
-    };
+
+    }
   }
 
   static parseCard(data) {
