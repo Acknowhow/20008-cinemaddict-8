@@ -1,5 +1,5 @@
-import buildCard from './card/card-builder';
+import buildContainer from './container-builder';
 
 export default () => {
-  buildCard();
+  buildContainer();
 };

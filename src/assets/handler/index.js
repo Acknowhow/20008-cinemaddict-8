@@ -1,6 +1,7 @@
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duration-format';
 momentDurationFormatSetup(moment);
+import {Sort} from './../../data';
 
 export const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -21,10 +22,10 @@ export const invert = (object) => {
   return newObject;
 };
 
-export const filterTopComments = (array, limit) => {
+export const getDescendingArrayByKey = (array, key, limit) => {
   return array.sort((a, b) => {
-    const first = a.comments.length;
-    const second = b.comments.length;
+    const first = key === Sort.MOST_COMMENTED ? a[key].length : a[key];
+    const second = key === Sort.MOST_RATED ? b[key].length : b[key];
 
     return second > first;
   }).slice(0, limit);
