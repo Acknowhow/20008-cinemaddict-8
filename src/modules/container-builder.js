@@ -32,7 +32,7 @@ const statisticFilters = main.querySelector(`.statistic__filters`);
 const statisticCtx = main.querySelector(`.statistic__chart`);
 const statisticList = main.querySelector(`.statistic__text-list`);
 
-const AUTHORIZATION = `Basic eo0w590ik298895646510=}`;
+const AUTHORIZATION = `Basic eo0w590ik298895646510=abzf}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/moowle`;
 
 const Api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
@@ -64,6 +64,7 @@ export default () => {
 
       search.onInput = (target) => {
         const inputValue = target.value.toUpperCase();
+
 
         const searchedCards = loadedCards.filter((it) => {
           return it.title.toUpperCase().indexOf(inputValue) !== -1;

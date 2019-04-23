@@ -19,10 +19,14 @@ import {
 
 const body = document.querySelector(`body`);
 
-export default (card, container, Api) => {
+export default (scaffolding) => {
   const renderCard = () => {
     let main;
     let producedPopupBuilders = [];
+
+    const {
+      card, container, Api
+    } = scaffolding;
 
     const {
       comments, title, image,
@@ -32,6 +36,7 @@ export default (card, container, Api) => {
     const cardContainer = new CardContainer(comments);
     const popupContainer = new PopupContainer(
       {image, title, isFavorite, isWatched, willWatch});
+
 
     const formSubmit = (evt) => {
       if (evt.ctrlKey === true && evt.keyCode === Key.ENTER) {

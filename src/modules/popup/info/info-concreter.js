@@ -5,7 +5,9 @@ export default class Info extends Component {
     super();
     this._audience = data.audience;
     this._title = data.title;
+    this._image = data.image;
     this._overallRating = data.overallRating;
+    this._originalTitle = data.originalTitle;
     this._rating = data.rating;
     this._actors = data.actors;
     this._writers = data.writers;
@@ -24,7 +26,7 @@ export default class Info extends Component {
   get template() {
     return `<div>
               <div class="film-details__poster">
-                <img class="film-details__poster-img" src="images/posters/blackmail.jpg" alt="incredables-2">
+                <img class="film-details__poster-img" src="${this._image}" alt="">
         
                 <p class="film-details__age">Audience: ${this._audience}+</p>
               </div>
@@ -33,7 +35,7 @@ export default class Info extends Component {
                 <div class="film-details__info-head">
                   <div class="film-details__title-wrap">
                     <h3 class="film-details__title">${this._title}</h3>
-                    <p class="film-details__title-original">Original: Невероятная семейка</p>
+                    <p class="film-details__title-original">Original: ${this._originalTitle}</p>
                   </div>
         
                   <div class="film-details__rating">

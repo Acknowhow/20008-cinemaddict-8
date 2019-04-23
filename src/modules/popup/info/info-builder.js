@@ -3,8 +3,8 @@ import Info from './info-concreter';
 
 export default (card, container) => {
   const {
-    audience, title, overallRating,
-    rating, actors, description, duration,
+    audience, title, image, overallRating,
+    rating, actors, description, duration, originalTitle,
     genre, director, writers, releaseDate, country
   } = card;
 
@@ -14,7 +14,7 @@ export default (card, container) => {
     .format(`MMMM D YYYY`);
 
   const info = new Info({
-    audience, title, overallRating, rating,
+    audience, title, image, overallRating, rating, originalTitle,
     genre, director, writers, actors, description,
     country, duration, releaseDateFormat});
   infoContainer.appendChild(info.render());

@@ -35,7 +35,7 @@ export const toJSON = (response) => {
   return response.json();
 };
 
-const getHistoryList = (cards) => {
+export const getHistoryList = (cards) => {
   return cards.filter((it) => it.isWatched === true);
 };
 
@@ -146,6 +146,22 @@ export const getCardsTopGenre = (object) => {
 
 export const getYear = (timestamp) => {
   return moment(`${timestamp}`, `x`).format('DD MMM YYYY');
+};
+
+export const getProfile = (array) => {
+  const filmsCount = getHistoryList(array).length;
+
+  if (filmsCount >= 21) {
+    return `movie buff`;
+  }
+  if (filmsCount >= 11) {
+    return `fan`;
+  }
+  if (filmsCount >= 1) {
+    return `novice`;
+  }
+
+  return ``;
 };
 
 export const getFilteredCards = (cards, filterName) => {
