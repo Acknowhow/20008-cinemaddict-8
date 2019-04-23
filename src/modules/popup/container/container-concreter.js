@@ -12,7 +12,9 @@ export default class Container extends Component {
     this._isWatched = data.isWatched;
     this._willWatch = data.willWatch;
 
-    this._onClose = null;
+    this._onCloseButton = null;
+    this._onCloseKey = null;
+
     this._onSubmit = null;
     this._onControls = null;
     this._onRating = null;
@@ -51,7 +53,7 @@ export default class Container extends Component {
   _onSubmitAction() {
 
     const formData = new FormData(
-      this._element.querySelector(`.film-details__inner`));
+        this._element.querySelector(`.film-details__inner`));
 
     const newData = this._processForm(formData);
 
@@ -61,18 +63,16 @@ export default class Container extends Component {
   }
 
   _onCloseKeyAction() {
-    if (typeof this._onClose === `function` &&
-      this._onClose.length > 0) {
-
-      this._onClose();
+    if (typeof this._onCloseKey === `function`) {
+      this._onCloseKey();
     }
   }
 
   _onCloseButtonClick(e) {
     e.preventDefault();
 
-    if (typeof this._onClose === `function`) {
-      this._onClose();
+    if (typeof this._onCloseButton === `function`) {
+      this._onCloseButton();
     }
   }
 
@@ -131,7 +131,7 @@ export default class Container extends Component {
     if (typeof this._onUndo === `function` &&
       target.tagName.toUpperCase() === `BUTTON`) {
 
-      this._onUndo(target)
+      this._onUndo(target);
     }
   }
 
@@ -139,9 +139,13 @@ export default class Container extends Component {
     this._onRating = fn;
   }
 
-  set onClose(fn) {
-    this._onClose = fn;
+  set onCloseKey(fn) {
+    this._onCloseKey = fn;
     this._onCloseKeyAction();
+  }
+
+  set onCloseButton(fn) {
+    this._onCloseButton = fn;
   }
 
   set onSubmit(fn) {
@@ -250,17 +254,32 @@ export default class Container extends Component {
 
   static stateMapper(target) {
     return {
-      watchlist: (value) => target.willWatch = value,
-      watched: (value) => target.isWatched = value,
-      favorite: (value) => target.isFavorite = value
-    }
+      watchlist: (value) => {
+        target.willWatch = value;
+        return target;
+      },
+      watched: (value) => {
+        target.isWatched = value;
+        return target;
+      },
+      favorite: (value) => {
+        target.isFavorite = value;
+        return target;
+      }
+    };
   }
 
   static formMapper(target) {
     return {
-      [`comment-emoji`]: (value) => target.comment[`emotion`] = value,
-      comment: (value) => target.comment.comment = value.trim(),
-    }
+      [`comment-emoji`]: (value) => {
+        target.comment[`emotion`] = value;
+        return target;
+      },
+      comment: (value) => {
+        target.comment.comment = value.trim();
+        return target;
+      },
+    };
   }
 
   static getInputState(input) {
@@ -293,7 +312,7 @@ export default class Container extends Component {
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
 
     setTimeout(() => {
-      this._element.style.animation = ``
+      this._element.style.animation = ``;
     }, ANIMATION_TIMEOUT);
   }
 

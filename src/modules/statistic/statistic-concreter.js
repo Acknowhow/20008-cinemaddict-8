@@ -13,5 +13,5 @@ export default (watchedCardsTotalCount, hoursValue, minutesValue, cardsTopGenre)
         <li class="statistic__text-item">
           <h4 class="statistic__item-title">Top genre</h4>
           <p class="statistic__item-text">${topGenreFirstLetterToUpperCase}</p>
-        </li>`
+        </li>`;
 };

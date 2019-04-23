@@ -24,8 +24,8 @@ export default class Comment extends Component {
               <span class="film-details__comment-day">${getCommentDate(this._comments[key][`date`])} ago</span>
             </p>
           </div>
-        </li>`
-    })
+        </li>`;
+    });
   }
 
   _getComments() {
@@ -41,7 +41,7 @@ export default class Comment extends Component {
           value="${key}"
           ${key === `neutral-face` ? `checked` : ``}
           >
-        <label class="film-details__emoji-label" for="emoji-${key}">${value}</label>`)
+        <label class="film-details__emoji-label" for="emoji-${key}">${value}</label>`);
     }
 
     return array;
