@@ -2,6 +2,22 @@ export const ratings = [
   1, 2, 3, 4, 5, 6, 7, 8, 9
 ];
 
+export const Key = {
+  ESCAPE: 27,
+  ENTER: 13
+};
+
+export const Delay = {
+  MESSAGE: 3000,
+  UPDATE: 2000
+};
+
+export const Color = {
+  CHECKED: `#FFE800`,
+  ACTIVE: `#D8D8D8`,
+  ALERT: `#DC143C`
+};
+
 export const Method = {
   GET: `GET`,
   POST: `POST`,

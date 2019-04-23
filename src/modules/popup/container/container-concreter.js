@@ -16,10 +16,12 @@ export default class Container extends Component {
     this._onSubmit = null;
     this._onControls = null;
     this._onRating = null;
+    this._onUndo = null;
 
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onControlsButtonClick = this._onControlsButtonClick.bind(this);
     this._onRatingButtonClick = this._onRatingButtonClick.bind(this);
+    this._onUndoButtonClick = this._onUndoButtonClick.bind(this);
   }
 
   _processForm(formData) {
@@ -33,7 +35,6 @@ export default class Container extends Component {
     };
 
     const FormMapper = Container.formMapper(entry);
-
     for (const pair of formData.entries()) {
 
       const [property, value] = pair;
@@ -47,30 +48,6 @@ export default class Container extends Component {
     return entry;
   }
 
-  _getWatchStatus() {
-    let markup;
-
-    if (this._isWatched) {
-      markup = `<span class="film-details__watched-status film-details__watched-status&#45;&#45;active">Already watched</span>`;
-    }
-    if (this._willWatch && !this._isWatched) {
-
-      markup = `<span class="film-details__watched-status film-details__watched-status&#45;&#45;active">Will watch</span>`
-    } if (!this._isWatched && !this._willWatch) {
-      markup = `<span class="film-details__watched-status film-details__watched-status"></span>`
-    }
-
-    return markup;
-  }
-
-  _updateWatchStatus() {
-    const controls = this._element.querySelector(`
-      .film-details__user-rating-controls`);
-
-    controls.firstElementChild.remove();
-    controls.insertAdjacentHTML(`afterbegin`, this._getWatchStatus());
-  }
-
   _onSubmitAction() {
 
     const formData = new FormData(
@@ -80,6 +57,14 @@ export default class Container extends Component {
 
     if (typeof this._onSubmit === `function`) {
       this._onSubmit(newData);
+    }
+  }
+
+  _onCloseKeyAction() {
+    if (typeof this._onClose === `function` &&
+      this._onClose.length > 0) {
+
+      this._onClose();
     }
   }
 
@@ -113,7 +98,6 @@ export default class Container extends Component {
     }
   }
 
-
   _onControlsButtonClick(e) {
     e.preventDefault();
 
@@ -130,12 +114,24 @@ export default class Container extends Component {
       const controlValue = target.attributes[`for`].nodeValue;
       const controlInput = this._element.querySelector(`#${controlValue}`);
 
-      const ContainerIsChecked = Container.getInputStatus(controlInput);
+      const ContainerIsChecked = Container.getInputState(controlInput);
       const StateMapper = Container.stateMapper(entry);
 
       StateMapper[controlValue](ContainerIsChecked);
 
       this._onControls(entry);
+    }
+  }
+
+  _onUndoButtonClick(e) {
+    e.preventDefault();
+
+    const {target} = e;
+
+    if (typeof this._onUndo === `function` &&
+      target.tagName.toUpperCase() === `BUTTON`) {
+
+      this._onUndo(target)
     }
   }
 
@@ -145,6 +141,7 @@ export default class Container extends Component {
 
   set onClose(fn) {
     this._onClose = fn;
+    this._onCloseKeyAction();
   }
 
   set onSubmit(fn) {
@@ -154,6 +151,10 @@ export default class Container extends Component {
 
   set onControls(fn) {
     this._onControls = fn;
+  }
+
+  set onUndo(fn) {
+    this._onUndo = fn;
   }
 
   get template() {
@@ -187,8 +188,9 @@ export default class Container extends Component {
           </section>
       
           <section class="film-details__user-rating-wrap">
-            <div class="film-details__user-rating-controls">${this._getWatchStatus()}
-              <button class="film-details__watched-reset" type="button">undo</button>
+            <div class="film-details__user-rating-controls">
+              <span class="film-details__watched-status film-details__watched-status"></span>
+              <button class="film-details__watched-reset visually-hidden" type="button">Undo</button>
             </div>
       
             <div class="film-details__user-score">
@@ -224,6 +226,9 @@ export default class Container extends Component {
 
     this._element.querySelector(`.film-details__user-rating-score`)
       .addEventListener(`click`, this._onRatingButtonClick);
+
+    this._element.querySelector(`
+      .film-details__watched-reset`).addEventListener(`click`, this._onUndoButtonClick);
   }
 
   unbind() {
@@ -237,6 +242,11 @@ export default class Container extends Component {
       .removeEventListener(`click`, this._onRatingButtonClick);
   }
 
+  static checkState(watchState) {
+    if (watchState.classList.contains(`film-details__watched-status--active`)) {
+      watchState.classList.remove(`film-details__watched-status--active`);
+    }
+  }
 
   static stateMapper(target) {
     return {
@@ -253,7 +263,7 @@ export default class Container extends Component {
     }
   }
 
-  static getInputStatus(input) {
+  static getInputState(input) {
     let isChecked;
 
     if (input.hasAttribute(`checked`)) {
@@ -268,6 +278,16 @@ export default class Container extends Component {
     return isChecked;
   }
 
+  enable() {
+    this._element.querySelector(`
+      .film-details__watched-reset`).classList.remove(`visually-hidden`);
+  }
+
+  disable() {
+    this._element.querySelector(`
+      .film-details__watched-reset`).classList.add(`visually-hidden`);
+  }
+
   shake() {
     const ANIMATION_TIMEOUT = 600;
     this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
@@ -277,13 +297,34 @@ export default class Container extends Component {
     }, ANIMATION_TIMEOUT);
   }
 
+  updateState() {
+    const watchState = this._element.querySelector(`
+      .film-details__watched-status`);
+
+    Container.checkState(watchState);
+
+    if (this._isWatched) {
+      watchState.classList.add(`film-details__watched-status--active`);
+      watchState.innerHTML = `Already watched`;
+    }
+
+    if (this._willWatch && !this._isWatched) {
+      watchState.classList.add(`film-details__watched-status--active`);
+      watchState.innerHTML = `Will watch`;
+    }
+
+    if (!this._isWatched && !this._willWatch) {
+      watchState.innerHTML = ``;
+    }
+  }
+
   update(data) {
     this._isFavorite = data.isFavorite;
     this._willWatch = data.willWatch;
     this._isWatched = data.isWatched;
 
     this.unbind();
-    this._updateWatchStatus();
+    this.updateState();
     this.bind();
   }
 }

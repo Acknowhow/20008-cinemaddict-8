@@ -6,7 +6,6 @@ export default class Container extends Component {
     super();
 
     this._filters = filters;
-
     this._onFilter = null;
     this._onFilterButtonClick = this._onFilterButtonClick.bind(this);
   }
@@ -29,7 +28,6 @@ export default class Container extends Component {
     this._element.innerHTML = this.template;
 
   }
-
   _getFilters() {
     return this._filters.map((it) => {
       const caption = it.name;

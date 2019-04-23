@@ -71,6 +71,7 @@ export const getMinutesValue = (string) => {
     startIndex, string.indexOf(`m`)).join(``);
 };
 
+
 export const getHoursMinutes = (minutes) => {
   return moment.duration(minutes, `minutes`).format(`h[h] m[m]`);
 };
@@ -119,7 +120,7 @@ export const getCardsTopGenre = (object) => {
 };
 
 export const getYear = (timestamp) => {
-  return new Date(timestamp).getFullYear();
+  return moment(`${timestamp}`, `x`).format('DD MMM YYYY');
 };
 
 export const getFilteredCards = (cards, filterName) => {

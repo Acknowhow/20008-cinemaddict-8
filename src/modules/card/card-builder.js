@@ -17,9 +17,12 @@ import {
 
 import concreteStatistic from './../statistic/statistic-concreter';
 import bridgeCard from './card-bridge';
+import buildSearch from './../search/search-builder';
 import buildFilterContainer from '../filter/container/container-builder';
 
 const body = document.querySelector(`body`);
+const searchContainer = body.querySelector(`.header__search`);
+
 const main = body.querySelector(`.main`);
 const films = main.querySelector(`.films-list`);
 const statistic = main.querySelector(`.statistic`);
@@ -36,6 +39,18 @@ export default () => {
   const stopLoader = loader();
   Api.getCards()
     .then((loadedCards) => {
+
+      const search = buildSearch(searchContainer);
+
+      search.onInput = (target) => {
+        const inputValue = target.value.toUpperCase();
+
+        const searchedCards = loadedCards.filter((it) => {
+          return it.title.toUpperCase().indexOf(inputValue) !== -1;
+        });
+
+        bridgeCard(searchedCards, Api);
+      };
 
       const filterContainer = buildFilterContainer(
         main, getFiltersState(loadedCards, filters));
@@ -61,10 +76,10 @@ export default () => {
           statisticList.innerHTML = ``;
           if (statistic.classList.contains(`visually-hidden`)) {
             statistic.classList.remove(`visually-hidden`);
+
             statisticFilters.classList.remove(`visually-hidden`);
             films.classList.add(`visually-hidden`);
           }
-
 
           const cardsByGenreCounted = getCardsByGenreCounted(getCardsByGenre(loadedCards));
 

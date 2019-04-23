@@ -13,7 +13,7 @@ export default class Info extends Component {
     this._description = data.description;
     this._releaseDate = data.releaseDateFormat;
     this._country = data.country;
-    this._duration = data.durationFormat;
+    this._duration = data.duration;
     this._genre = data.genre;
   }
 
@@ -61,7 +61,7 @@ export default class Info extends Component {
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Runtime</td>
-                    <td class="film-details__cell">${this._duration}</td>
+                    <td class="film-details__cell">${this._duration} min</td>
                   </tr>
                   <tr class="film-details__row">
                     <td class="film-details__term">Country</td>

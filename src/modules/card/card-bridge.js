@@ -6,8 +6,16 @@ import buildInfo from './../popup/info/info-builder';
 import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
 
+import {Key} from '../../data';
+
 import {manufacture} from '../../assets/factory';
-import {loader, block, unblock, load} from '../../assets/util/';
+import {
+  blockComment,
+  unblockComment,
+  blockRating,
+  unblockRating,
+  load, blockUndo, unblockUndo
+} from '../../assets/util/';
 
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
@@ -33,14 +41,12 @@ export default (cards, Api) => {
       const popupContainer = new PopupContainer(
         {image, title, isFavorite, isWatched, willWatch});
 
-      const formSubmission = (evt) => {
-        if (evt.ctrlKey === true && evt.keyCode === 13) {
+      const formSubmit = (evt) => {
+        if (evt.ctrlKey === true && evt.keyCode === Key.ENTER) {
 
           popupContainer.onSubmit = (newData) => {
-            const stopLoader = loader();
 
-            block(popupContainer, `.film-details__comment-input`, `comment`);
-
+            blockComment(popupContainer, `.film-details__comment-input`);
             card.comments.push(newData.comment);
 
             Api.updateCard({id: card.id, data: card.toRAW()})
@@ -49,21 +55,37 @@ export default (cards, Api) => {
               .then((newCard) => {
                 const comment = producedPopupBuilders.find((it) => it[`comment`]);
 
-                unblock(popupContainer,
-                  `.film-details__comment-input`,
-                  `comment`, true);
+                unblockComment(popupContainer,
+                  `.film-details__comment-input`, true);
 
                 cardContainer.update(newCard);
                 comment[`comment`].update(newCard);
+                popupContainer.update(newCard);
+                popupContainer.enable();
 
               })
-              .then(stopLoader)
               .catch(() => {
 
                 popupContainer.shake();
-                unblock(popupContainer, `.film-details__comment-input`,
-                  `comment`, false);
+                unblockComment(popupContainer,
+                  `.film-details__comment-input`, false);
               });
+          };
+        }
+      };
+
+      const popupHide = (evt) => {
+        const key = evt.keyCode;
+        if (key === Key.ESCAPE) {
+
+          popupContainer.onClose = (keyCode) => {
+
+            cardContainer.bind();
+
+            body.removeEventListener(`keydown`, formSubmit);
+            body.removeEventListener(`keydown`, popupHide);
+            body.removeChild(popupContainer.element);
+            popupContainer.unrender();
           };
         }
       };
@@ -81,16 +103,18 @@ export default (cards, Api) => {
         producedPopupBuilders = manufacture(
           card, popupContainer.element, ...popupBuilders);
 
+        popupContainer.updateState();
+
         body.appendChild(popupContainer.element);
-        body.addEventListener('keydown', formSubmission);
+        body.addEventListener('keydown', formSubmit);
+        body.addEventListener(`keydown`, popupHide);
 
         cardContainer.unbind();
       };
 
       popupContainer.onRating = (data) => {
-        const stopLoader = loader();
 
-        block(popupContainer, `.film-details__user-rating-score`, `rating`);
+        blockRating(popupContainer, `.film-details__user-rating-score`);
         card.rating = data.rating;
 
         Api.updateCard({id: card.id, data: card.toRAW()})
@@ -99,20 +123,17 @@ export default (cards, Api) => {
           .then((newCard) => {
             const rating = producedPopupBuilders.find((it) => it[`rating`]);
 
-            unblock(popupContainer,
-              `.film-details__user-rating-score`,
-              `rating`, true);
+            unblockRating(popupContainer,
+              `.film-details__user-rating-score`, true);
 
             rating[`rating`].update(newCard);
           })
-          .then(stopLoader)
           .catch(() => {
 
             popupContainer.shake();
-            unblock(popupContainer, `.film-details__user-rating-score`,
-              `rating`, false);
+            unblockRating(popupContainer,
+              `.film-details__user-rating-score`, false);
           });
-
       };
 
       popupContainer.onControls = (target) => {
@@ -124,24 +145,43 @@ export default (cards, Api) => {
         popupContainer.update(card);
       };
 
+      popupContainer.onUndo = (target) => {
+
+        blockUndo(popupContainer, target);
+        card.comments.pop();
+
+        Api.updateCard({id: card.id, data: card.toRAW()})
+          .then((newCard) => load(newCard))
+
+          .then((newCard) => {
+            const comment = producedPopupBuilders.find((it) => it[`comment`]);
+
+            unblockUndo(popupContainer,
+              target, true);
+
+            cardContainer.update(newCard);
+            comment[`comment`].update(newCard);
+            popupContainer.update(newCard);
+            popupContainer.disable();
+
+          })
+          .catch(() => {
+
+            popupContainer.shake();
+            unblockUndo(popupContainer,
+              target, false);
+          });
+      };
+
       popupContainer.onClose = () => {
         cardContainer.bind();
 
-        body.removeEventListener('keydown', formSubmission);
+        body.removeEventListener(`keydown`, formSubmit);
+        body.removeEventListener(`keydown`, popupHide);
         body.removeChild(popupContainer.element);
         popupContainer.unrender();
       };
     }
   };
   renderCards();
-}
-
-
-
-
-
-
-
-
-
-
+};
