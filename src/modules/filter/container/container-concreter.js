@@ -21,7 +21,6 @@ export default class Container extends Component {
 
       const filterValue = target.attributes[`href`].nodeValue;
       this._onFilter(Filter[filterValue]);
-
     }
   }
 
@@ -71,7 +70,7 @@ export default class Container extends Component {
 
     for (const filter of filters) {
       if (filter.classList.contains(`main-navigation__item--active`)) {
-        filter.classList.remove(`main-navigation__item--active`)
+        filter.classList.remove(`main-navigation__item--active`);
       }
     }
     currentFilter.classList.add(`main-navigation__item--active`);

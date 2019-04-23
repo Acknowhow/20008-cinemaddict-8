@@ -54,7 +54,7 @@ const getArrayMax = (array) => {
       return p;
     }
     return v;
-    });
+  });
 };
 
 export const getSlicedArray = (array, start, end) => {
@@ -97,7 +97,7 @@ export const getHoursValue = (string) => {
 export const getMinutesValue = (string) => {
   const startIndex = string.indexOf(` `) + 1;
   return [...string].slice(
-    startIndex, string.indexOf(`m`)).join(``);
+      startIndex, string.indexOf(`m`)).join(``);
 };
 
 
@@ -143,7 +143,6 @@ export const getCardsTotalDuration = (array) => {
 
 export const getCardsTopGenre = (object) => {
 
-  console.log(object);
   const entries = [...Object.entries(object)];
 
   const topCount = getArrayMax([...Object.values(object)]);
@@ -152,7 +151,7 @@ export const getCardsTopGenre = (object) => {
 };
 
 export const getYear = (timestamp) => {
-  return moment(`${timestamp}`, `x`).format('DD MMM YYYY');
+  return moment(`${timestamp}`, `x`).format(`DD MMM YYYY`);
 };
 
 export const getProfile = (array) => {

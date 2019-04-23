@@ -35,7 +35,7 @@ export const error = (method) => {
 export const load = (result) => {
 
   return new Promise((resolve, reject) => {
-    setTimeout(result ? resolve(result) : reject, Delay.UPDATE)
+    setTimeout(result ? resolve(result) : reject, Delay.UPDATE);
   });
 };
 

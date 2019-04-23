@@ -5,11 +5,11 @@ import {Sort} from '../../data';
 
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
-  `.films-list__container--main`);
+    `.films-list__container--main`);
 const topCommentedContainer = body.querySelector(
-  `.films-list__container--commented`);
+    `.films-list__container--commented`);
 const topRatedContainer = body.querySelector(
-  `.films-list__container--rated`);
+    `.films-list__container--rated`);
 
 
 export default (cards, cardsTotal, Api) => {
@@ -18,10 +18,10 @@ export default (cards, cardsTotal, Api) => {
   topRatedContainer.innerHTML = ``;
 
   const topCommentedCards = getDescendingArrayByKey(
-    [...cardsTotal], `comments`, Sort.MOST_COMMENTED);
+      [...cardsTotal], `comments`, Sort.MOST_COMMENTED);
 
   const topRatedCards = getDescendingArrayByKey(
-    [...cardsTotal], `overallRating`, Sort.MOST_RATED);
+      [...cardsTotal], `overallRating`, Sort.MOST_RATED);
 
   for (let i = 0; i < topRatedCards.length; i++) {
     const card = topRatedCards[i];

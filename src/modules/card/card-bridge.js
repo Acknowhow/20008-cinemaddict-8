@@ -21,7 +21,6 @@ const body = document.querySelector(`body`);
 
 export default (scaffolding) => {
   const renderCard = () => {
-    let main;
     let producedPopupBuilders = [];
 
     const {
@@ -35,7 +34,7 @@ export default (scaffolding) => {
 
     const cardContainer = new CardContainer(comments);
     const popupContainer = new PopupContainer(
-      {image, title, isFavorite, isWatched, willWatch});
+        {image, title, isFavorite, isWatched, willWatch});
 
 
     const formSubmit = (evt) => {
@@ -53,7 +52,7 @@ export default (scaffolding) => {
               const comment = producedPopupBuilders.find((it) => it[`comment`]);
 
               unblockComment(popupContainer,
-                `.film-details__comment-input`, true);
+                  `.film-details__comment-input`, true);
 
               cardContainer.update(newCard);
               comment[`comment`].update(newCard);
@@ -65,7 +64,7 @@ export default (scaffolding) => {
 
               popupContainer.shake();
               unblockComment(popupContainer,
-                `.film-details__comment-input`, false);
+                  `.film-details__comment-input`, false);
             });
         };
       }
@@ -74,9 +73,7 @@ export default (scaffolding) => {
     const popupHide = (evt) => {
       const key = evt.keyCode;
       if (key === Key.ESCAPE) {
-
-        popupContainer.onClose = (keyCode) => {
-
+        popupContainer.onCloseKey = () => {
           cardContainer.bind();
 
           body.removeEventListener(`keydown`, formSubmit);
@@ -92,13 +89,13 @@ export default (scaffolding) => {
     ];
 
     container.appendChild(cardContainer.render());
-    main = buildMain(card, cardContainer.element);
+    buildMain(card, cardContainer.element);
 
     cardContainer.onComments = () => {
       popupContainer.render();
 
       producedPopupBuilders = manufacture(
-        card, popupContainer.element, ...popupBuilders);
+          card, popupContainer.element, ...popupBuilders);
 
       popupContainer.updateState();
 
@@ -121,7 +118,7 @@ export default (scaffolding) => {
           const rating = producedPopupBuilders.find((it) => it[`rating`]);
 
           unblockRating(popupContainer,
-            `.film-details__user-rating-score`, true);
+              `.film-details__user-rating-score`, true);
 
           rating[`rating`].update(newCard);
         })
@@ -129,7 +126,7 @@ export default (scaffolding) => {
 
           popupContainer.shake();
           unblockRating(popupContainer,
-            `.film-details__user-rating-score`, false);
+              `.film-details__user-rating-score`, false);
         });
     };
 
@@ -154,7 +151,7 @@ export default (scaffolding) => {
           const comment = producedPopupBuilders.find((it) => it[`comment`]);
 
           unblockUndo(popupContainer,
-            target, true);
+              target, true);
 
           cardContainer.update(newCard);
           comment[`comment`].update(newCard);
@@ -166,11 +163,11 @@ export default (scaffolding) => {
 
           popupContainer.shake();
           unblockUndo(popupContainer,
-            target, false);
+              target, false);
         });
     };
 
-    popupContainer.onClose = () => {
+    popupContainer.onCloseButton = () => {
       cardContainer.bind();
 
       body.removeEventListener(`keydown`, formSubmit);
