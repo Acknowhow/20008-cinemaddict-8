@@ -21,6 +21,15 @@ export const invert = (object) => {
   return newObject;
 };
 
+export const filterTopComments = (array, limit) => {
+  return array.sort((a, b) => {
+    const first = a.comments.length;
+    const second = b.comments.length;
+
+    return second > first;
+  }).slice(0, limit);
+};
+
 export const toJSON = (response) => {
   return response.json();
 };

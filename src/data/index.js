@@ -2,6 +2,11 @@ export const ratings = [
   1, 2, 3, 4, 5, 6, 7, 8, 9
 ];
 
+export const Sort = {
+  [`MOST_COMMENTED`]: 2,
+  [`MOST_RATED`]: 2
+};
+
 export const Key = {
   ESCAPE: 27,
   ENTER: 13

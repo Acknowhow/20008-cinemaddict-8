@@ -140,7 +140,7 @@ export default () => {
       cardsToDisplay = getSlicedArray(
         [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
 
-      bridgeCard(cardsToDisplay, Api);
+      bridgeCard(cardsToDisplay, cardsTotal, Api);
     })
     .then(stopLoader);
 };

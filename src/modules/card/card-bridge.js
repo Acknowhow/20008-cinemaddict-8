@@ -6,7 +6,8 @@ import buildInfo from './../popup/info/info-builder';
 import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
 
-import {Key} from '../../data';
+import {filterTopComments} from '../../assets/handler';
+import {Key, Sort} from '../../data';
 
 import {manufacture} from '../../assets/factory';
 import {
@@ -20,12 +21,26 @@ import {
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
+const commentedContainer = body.querySelector(
+  `.films-list__container--commented`);
+const topRatedContainer = body.querySelector(
+  `.films-list__container--rated`);
 
-export default (cards, Api) => {
+
+export default (cards, cardsTotal, Api) => {
   cardsContainer.innerHTML = ``;
+  commentedContainer.innerHTML = ``;
+  topRatedContainer.innerHTML = ``;
 
   const renderCards = (updatedCards = null) => {
     const activeCards = updatedCards || cards;
+
+    const topCommentsCards = filterTopComments(activeCards, Sort.MOST_COMMENTED);
+
+    // for (let i = 0; i < topCommentsCards.length; i++) {
+    //
+    // }
+
 
     for (let i = 0; i < activeCards.length; i++) {
       const card = activeCards[i];
