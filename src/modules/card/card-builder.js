@@ -12,12 +12,14 @@ import {
   getHoursValue,
   getMinutesValue,
   getCardsTopGenre,
-  getCardsByGenreSorted
+  getCardsByGenreSorted,
+  getSlicedArray
 } from '../../assets/handler';
 
 import concreteStatistic from './../statistic/statistic-concreter';
 import bridgeCard from './card-bridge';
 import buildSearch from './../search/search-builder';
+import buildShow from './../show/show-builder';
 import buildFilterContainer from '../filter/container/container-builder';
 
 const body = document.querySelector(`body`);
@@ -36,11 +38,27 @@ const END_POINT = `https://es8-demo-srv.appspot.com/moowle`;
 const Api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default () => {
+  const CARDS_SLICE_INDEX = 0;
+  let cardsToDisplayCount = 5;
+  let cardsTotal = [];
+  let cardsToDisplay = [];
+
   const stopLoader = loader();
   Api.getCards()
     .then((loadedCards) => {
 
       const search = buildSearch(searchContainer);
+      const show = buildShow(films);
+
+      show.onShow = () => {
+        cardsToDisplayCount += 2;
+
+        cardsToDisplay = getSlicedArray(
+          [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
+
+        show.checkState(cardsTotal, cardsToDisplayCount);
+        bridgeCard(cardsToDisplay, Api);
+      };
 
       search.onInput = (target) => {
         const inputValue = target.value.toUpperCase();
@@ -56,9 +74,11 @@ export default () => {
         main, getFiltersState(loadedCards, filters));
 
       filterContainer.onFilter = (target) => {
+
         const filteredCards = getFilteredCards(loadedCards, target);
 
         if (typeof filteredCards !== `string`) {
+          cardsToDisplayCount = target !== `all` ? 2 : 5;
 
           if (films.classList.contains(`visually-hidden`)) {
             films.classList.remove(`visually-hidden`);
@@ -69,8 +89,16 @@ export default () => {
             statisticFilters.classList.add(`visually-hidden`);
           }
           filterContainer.update(getFiltersState(loadedCards, filters));
+          filterContainer.updateState(target);
 
-          bridgeCard(filteredCards, Api);
+          cardsTotal = filteredCards;
+
+          cardsToDisplay = getSlicedArray(
+            [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
+
+          show.checkState(cardsTotal, cardsToDisplayCount);
+
+          bridgeCard(cardsToDisplay, Api);
         } else {
 
           statisticList.innerHTML = ``;

@@ -1,5 +1,6 @@
 import Component from '../../../assets/concreter';
 import {Filter} from '../../../data';
+import {invert} from '../../../assets/handler';
 
 export default class Container extends Component {
   constructor(filters) {
@@ -40,7 +41,7 @@ export default class Container extends Component {
 
       return `
         <a href="#${captionToLowerCase}"
-        class="main-navigation__item main-navigation__item${state ? `&#45;&#45;${state}` : ``}">
+        class="main-navigation__item ${state ? `main-navigation__item&#45;&#45;${state}` : `main-navigation__item`}">
         ${captionFirstLetterToUpperCase} ${amount ? `<span class="main-navigation__item-count">${amount}</span>` : ``}
         </a>`;
     });
@@ -60,6 +61,20 @@ export default class Container extends Component {
 
   unbind() {
     this._element.removeEventListener(`click`, this._onFilterButtonClick);
+  }
+
+  updateState(target) {
+    const invertFilter = invert(Filter);
+
+    const currentFilter = this._element.querySelector(`a[href='${invertFilter[target]}']`);
+    const filters = this._element.querySelectorAll(`.main-navigation__item`);
+
+    for (const filter of filters) {
+      if (filter.classList.contains(`main-navigation__item--active`)) {
+        filter.classList.remove(`main-navigation__item--active`)
+      }
+    }
+    currentFilter.classList.add(`main-navigation__item--active`);
   }
 
   update(filters) {

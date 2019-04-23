@@ -10,6 +10,17 @@ export const checkStatus = (response) => {
   }
 };
 
+export const invert = (object) => {
+  const newObject = {};
+
+  for (const prop in object) {
+    if (object.hasOwnProperty(prop)) {
+      newObject[object[prop]] = prop;
+    }
+  }
+  return newObject;
+};
+
 export const toJSON = (response) => {
   return response.json();
 };
@@ -30,6 +41,10 @@ const getArrayMax = (array) => {
   return array.reduce((p, v) => {
     return (p > v ? p : v);
   })
+};
+
+export const getSlicedArray = (array, start, end) => {
+  return array.slice(start, end);
 };
 
 export const getCommentDate = (timeStamp) => {

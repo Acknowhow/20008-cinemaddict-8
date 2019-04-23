@@ -1,5 +1,4 @@
 import Component from '../../assets/concreter';
-import {Filter} from "../../data";
 
 export default class Container extends Component {
   constructor() {
