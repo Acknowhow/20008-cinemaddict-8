@@ -1,8 +1,7 @@
 import bridgeCard from './card-bridge';
 
-import {getDescendingArrayByKey, getProfile, getHistoryList} from '../../assets/handler';
-import {Key, Sort} from '../../data';
-import buildProfile from '../profile/profile-builder';
+import {getDescendingArrayByKey} from '../../assets/handler';
+import {Sort} from '../../data';
 
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
@@ -19,10 +18,10 @@ export default (cards, cardsTotal, Api) => {
   topRatedContainer.innerHTML = ``;
 
   const topCommentedCards = getDescendingArrayByKey(
-    [...cards], `comments`, Sort.MOST_COMMENTED);
+    [...cardsTotal], `comments`, Sort.MOST_COMMENTED);
 
   const topRatedCards = getDescendingArrayByKey(
-    [...cards], `overallRating`, Sort.MOST_RATED);
+    [...cardsTotal], `overallRating`, Sort.MOST_RATED);
 
   for (let i = 0; i < topRatedCards.length; i++) {
     const card = topRatedCards[i];

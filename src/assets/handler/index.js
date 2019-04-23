@@ -49,8 +49,12 @@ const getFavoritesList = (cards) => {
 
 const getArrayMax = (array) => {
   return array.reduce((p, v) => {
-    return (p > v ? p : v);
-  })
+
+    if (p > v) {
+      return p;
+    }
+    return v;
+    });
 };
 
 export const getSlicedArray = (array, start, end) => {
@@ -87,7 +91,7 @@ export const getCommentDate = (timeStamp) => {
 
 export const getHoursValue = (string) => {
   return [...string].slice(
-    0, string.indexOf(`h`)).join(``);
+      0, string.indexOf(`h`)).join(``);
 };
 
 export const getMinutesValue = (string) => {
@@ -138,7 +142,10 @@ export const getCardsTotalDuration = (array) => {
 
 
 export const getCardsTopGenre = (object) => {
+
+  console.log(object);
   const entries = [...Object.entries(object)];
+
   const topCount = getArrayMax([...Object.values(object)]);
 
   return entries.find((it) => it[1] === topCount)[0];

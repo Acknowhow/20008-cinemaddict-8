@@ -1,4 +1,4 @@
-import API from './../api'
+import API from './../api';
 import {loader} from './../assets/util/';
 import {filters} from './../data';
 import chart from './../assets/chart';
@@ -34,7 +34,7 @@ const statisticFilters = main.querySelector(`.statistic__filters`);
 const statisticCtx = main.querySelector(`.statistic__chart`);
 const statisticList = main.querySelector(`.statistic__text-list`);
 
-const AUTHORIZATION = `Basic eo0w590ik298895646510=abzf}`;
+const AUTHORIZATION = `Basic eo0w590ik298895646510=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/moowle`;
 
 const Api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
@@ -61,10 +61,10 @@ export default () => {
           cardsToDisplayCount + 2 : cardsToDisplayCount + 5;
 
         cardsToDisplay = getSlicedArray(
-          [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
+            [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
 
         show.checkState(cardsTotal, cardsToDisplayCount);
-        buildCard(cardsToDisplay, Api);
+        buildCard(cardsToDisplay, cardsTotal, Api);
       };
 
       search.onInput = (target) => {
@@ -75,11 +75,11 @@ export default () => {
           return it.title.toUpperCase().indexOf(inputValue) !== -1;
         });
 
-        buildCard(searchedCards, Api);
+        buildCard(searchedCards, cardsTotal, Api);
       };
 
       const filterContainer = buildFilterContainer(
-        main, getFiltersState(loadedCards, filters));
+          main, getFiltersState(loadedCards, filters));
 
       filterContainer.onFilter = (target) => {
         currentTarget = target;
@@ -103,7 +103,7 @@ export default () => {
           cardsTotal = filteredCards;
 
           cardsToDisplay = getSlicedArray(
-            [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
+              [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
 
           show.checkState(cardsTotal, cardsToDisplayCount);
 
@@ -119,7 +119,7 @@ export default () => {
           }
 
           const cardsByGenreCounted = getCardsByGenreCounted(
-            getCardsByGenre(loadedCards));
+              getCardsByGenre(loadedCards));
 
           const {
             genresArray,
@@ -136,7 +136,7 @@ export default () => {
 
 
           statisticList.insertAdjacentHTML(`beforeend`, concreteStatistic(
-            watchedCardsTotalCount, hoursValue, minutesValue, cardsTopGenre));
+              watchedCardsTotalCount, hoursValue, minutesValue, cardsTopGenre));
 
           chart(statisticCtx, genresArray, genresCountArray);
         }
@@ -145,7 +145,7 @@ export default () => {
       cardsToDisplayCount = 5;
       currentTarget = `all`;
       cardsToDisplay = getSlicedArray(
-        [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
+          [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
 
       buildCard(cardsToDisplay, cardsTotal, Api);
     })

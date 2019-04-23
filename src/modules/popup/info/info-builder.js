@@ -20,4 +20,4 @@ export default (card, container) => {
   infoContainer.appendChild(info.render());
 
   return {info};
-}
+};
