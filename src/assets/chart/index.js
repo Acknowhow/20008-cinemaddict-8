@@ -1,4 +1,4 @@
-import Chart from 'chart.js'
+import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels';
 
 export default (canvasContainer, genresArray, genresCountArray) => {
@@ -21,8 +21,8 @@ export default (canvasContainer, genresArray, genresCountArray) => {
             size: 20
           },
           color: `#ffffff`,
-          anchor: 'start',
-          align: 'start',
+          anchor: `start`,
+          align: `start`,
           offset: 40,
         }
       },
@@ -58,4 +58,5 @@ export default (canvasContainer, genresArray, genresCountArray) => {
       }
     }
   });
-}
+};
+

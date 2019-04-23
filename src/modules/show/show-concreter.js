@@ -39,7 +39,7 @@ export default class Container extends Component {
 
     if (cards.length > index) {
       if (this._element.classList.contains(`visually-hidden`)) {
-        this._element.classList.remove(`visually-hidden`)
+        this._element.classList.remove(`visually-hidden`);
       }
     }
   }

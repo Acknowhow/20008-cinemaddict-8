@@ -20,7 +20,7 @@ export default class Info extends Component {
   }
 
   _getGenres() {
-    return this._genre.map((it) => `<span class="film-details__genre">${it}</span>`)
+    return this._genre.map((it) => `<span class="film-details__genre">${it}</span>`);
   }
 
   get template() {
