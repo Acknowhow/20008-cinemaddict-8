@@ -39,6 +39,7 @@ const Api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 
 export default () => {
   const CARDS_SLICE_INDEX = 0;
+  let currentTarget = ``;
   let cardsToDisplayCount = 5;
   let cardsTotal = [];
   let cardsToDisplay = [];
@@ -51,7 +52,8 @@ export default () => {
       const show = buildShow(films);
 
       show.onShow = () => {
-        cardsToDisplayCount += 2;
+        cardsToDisplayCount = currentTarget !== `all` ?
+          cardsToDisplayCount + 2 : cardsToDisplayCount + 5;
 
         cardsToDisplay = getSlicedArray(
           [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
@@ -74,11 +76,12 @@ export default () => {
         main, getFiltersState(loadedCards, filters));
 
       filterContainer.onFilter = (target) => {
+        currentTarget = target;
 
-        const filteredCards = getFilteredCards(loadedCards, target);
+        const filteredCards = getFilteredCards(loadedCards, currentTarget);
 
         if (typeof filteredCards !== `string`) {
-          cardsToDisplayCount = target !== `all` ? 2 : 5;
+          cardsToDisplayCount = currentTarget !== `all` ? 2 : 5;
 
           if (films.classList.contains(`visually-hidden`)) {
             films.classList.remove(`visually-hidden`);
@@ -89,7 +92,7 @@ export default () => {
             statisticFilters.classList.add(`visually-hidden`);
           }
           filterContainer.update(getFiltersState(loadedCards, filters));
-          filterContainer.updateState(target);
+          filterContainer.updateState(currentTarget);
 
           cardsTotal = filteredCards;
 
@@ -131,8 +134,13 @@ export default () => {
           chart(statisticCtx, genresArray, genresCountArray);
         }
       };
+      cardsTotal = loadedCards;
+      cardsToDisplayCount = 5;
+      currentTarget = `all`;
+      cardsToDisplay = getSlicedArray(
+        [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
 
-      bridgeCard(loadedCards, Api);
+      bridgeCard(cardsToDisplay, Api);
     })
     .then(stopLoader);
 };
