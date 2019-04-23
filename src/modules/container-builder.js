@@ -13,7 +13,7 @@ import {
   getMinutesValue,
   getCardsTopGenre,
   getCardsByGenreSorted,
-  getSlicedArray
+  getSlicedArray, getProfile
 } from './../assets/handler';
 
 import concreteStatistic from './statistic/statistic-concreter';
@@ -21,9 +21,11 @@ import buildCard from './card/card-builder';
 import buildSearch from './search/search-builder';
 import buildShow from './show/show-builder';
 import buildFilterContainer from './filter/container/container-builder';
+import buildProfile from "./profile/profile-builder";
 
 const body = document.querySelector(`body`);
 const searchContainer = body.querySelector(`.header__search`);
+const profileContainer = body.querySelector(`.header__profile`);
 
 const main = body.querySelector(`.main`);
 const films = main.querySelector(`.films-list`);
@@ -50,6 +52,9 @@ export default () => {
 
       const search = buildSearch(searchContainer);
       const show = buildShow(films);
+      const profileState = getProfile(loadedCards);
+
+      buildProfile(profileState, profileContainer);
 
       show.onShow = () => {
         cardsToDisplayCount = currentTarget !== `all` ?

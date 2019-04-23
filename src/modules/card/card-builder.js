@@ -11,16 +11,12 @@ const topCommentedContainer = body.querySelector(
   `.films-list__container--commented`);
 const topRatedContainer = body.querySelector(
   `.films-list__container--rated`);
-const profileContainer = body.querySelector(`.header__profile`);
 
 
 export default (cards, cardsTotal, Api) => {
   cardsContainer.innerHTML = ``;
   topCommentedContainer.innerHTML = ``;
   topRatedContainer.innerHTML = ``;
-
-  // const profileState = getProfile(cardsTotal);
-  // const profile = buildProfile(profileState, profileContainer);
 
   const topCommentedCards = getDescendingArrayByKey(
     [...cards], `comments`, Sort.MOST_COMMENTED);
