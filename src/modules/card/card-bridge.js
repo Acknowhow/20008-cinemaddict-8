@@ -6,142 +6,178 @@ import buildInfo from './../popup/info/info-builder';
 import buildComment from './../popup/comment/comment-builder';
 import buildRating from './../popup/rating/rating-builder.js';
 
+import {Key} from '../../data';
+
 import {manufacture} from '../../assets/factory';
-import {loader, block, unblock, load} from '../../assets/util/';
+import {
+  blockComment,
+  unblockComment,
+  blockRating,
+  unblockRating,
+  load, blockUndo, unblockUndo
+} from '../../assets/util/';
 
 const body = document.querySelector(`body`);
-const cardsContainer = body.querySelector(
-    `.films-list__container--main`);
 
-export default (cards, Api) => {
-  cardsContainer.innerHTML = ``;
+export default (scaffolding) => {
+  const renderCard = () => {
+    let main;
+    let producedPopupBuilders = [];
 
-  const renderCards = (updatedCards = null) => {
-    const activeCards = updatedCards || cards;
+    const {
+      card, container, Api
+    } = scaffolding;
 
-    for (let i = 0; i < activeCards.length; i++) {
-      const card = activeCards[i];
+    const {
+      comments, title, image,
+      isFavorite, isWatched, willWatch
+    } = card;
 
-      let main;
-      let producedPopupBuilders = [];
+    const cardContainer = new CardContainer(comments);
+    const popupContainer = new PopupContainer(
+      {image, title, isFavorite, isWatched, willWatch});
 
-      const {
-        comments, title, image,
-        isFavorite, isWatched, willWatch} = card;
 
-      const cardContainer = new CardContainer(comments);
-      const popupContainer = new PopupContainer(
-        {image, title, isFavorite, isWatched, willWatch});
+    const formSubmit = (evt) => {
+      if (evt.ctrlKey === true && evt.keyCode === Key.ENTER) {
 
-      const formSubmission = (evt) => {
-        if (evt.ctrlKey === true && evt.keyCode === 13) {
+        popupContainer.onSubmit = (newData) => {
 
-          popupContainer.onSubmit = (newData) => {
-            const stopLoader = loader();
+          blockComment(popupContainer, `.film-details__comment-input`);
+          card.comments.push(newData.comment);
 
-            block(popupContainer, `.film-details__comment-input`, `comment`);
+          Api.updateCard({id: card.id, data: card.toRAW()})
+            .then((newCard) => load(newCard))
 
-            card.comments.push(newData.comment);
+            .then((newCard) => {
+              const comment = producedPopupBuilders.find((it) => it[`comment`]);
 
-            Api.updateCard({id: card.id, data: card.toRAW()})
-              .then((newCard) => load(newCard))
+              unblockComment(popupContainer,
+                `.film-details__comment-input`, true);
 
-              .then((newCard) => {
-                const comment = producedPopupBuilders.find((it) => it[`comment`]);
+              cardContainer.update(newCard);
+              comment[`comment`].update(newCard);
+              popupContainer.update(newCard);
+              popupContainer.enable();
 
-                unblock(popupContainer,
-                  `.film-details__comment-input`,
-                  `comment`, true);
+            })
+            .catch(() => {
 
-                cardContainer.update(newCard);
-                comment[`comment`].update(newCard);
+              popupContainer.shake();
+              unblockComment(popupContainer,
+                `.film-details__comment-input`, false);
+            });
+        };
+      }
+    };
 
-              })
-              .then(stopLoader)
-              .catch(() => {
+    const popupHide = (evt) => {
+      const key = evt.keyCode;
+      if (key === Key.ESCAPE) {
 
-                popupContainer.shake();
-                unblock(popupContainer, `.film-details__comment-input`,
-                  `comment`, false);
-              });
-          };
-        }
-      };
+        popupContainer.onClose = (keyCode) => {
 
-      const popupBuilders = [
-        buildInfo, buildComment, buildRating
-      ];
+          cardContainer.bind();
 
-      cardsContainer.appendChild(cardContainer.render());
-      main = buildMain(card, cardContainer.element);
+          body.removeEventListener(`keydown`, formSubmit);
+          body.removeEventListener(`keydown`, popupHide);
+          body.removeChild(popupContainer.element);
+          popupContainer.unrender();
+        };
+      }
+    };
 
-      cardContainer.onComments = () => {
-        popupContainer.render();
+    const popupBuilders = [
+      buildInfo, buildComment, buildRating
+    ];
 
-        producedPopupBuilders = manufacture(
-          card, popupContainer.element, ...popupBuilders);
+    container.appendChild(cardContainer.render());
+    main = buildMain(card, cardContainer.element);
 
-        body.appendChild(popupContainer.element);
-        body.addEventListener('keydown', formSubmission);
+    cardContainer.onComments = () => {
+      popupContainer.render();
 
-        cardContainer.unbind();
-      };
+      producedPopupBuilders = manufacture(
+        card, popupContainer.element, ...popupBuilders);
 
-      popupContainer.onRating = (data) => {
-        const stopLoader = loader();
+      popupContainer.updateState();
 
-        block(popupContainer, `.film-details__user-rating-score`, `rating`);
-        card.rating = data.rating;
+      body.appendChild(popupContainer.element);
+      body.addEventListener(`keydown`, formSubmit);
+      body.addEventListener(`keydown`, popupHide);
 
-        Api.updateCard({id: card.id, data: card.toRAW()})
-          .then((newCard) => load(newCard))
+      cardContainer.unbind();
+    };
 
-          .then((newCard) => {
-            const rating = producedPopupBuilders.find((it) => it[`rating`]);
+    popupContainer.onRating = (data) => {
 
-            unblock(popupContainer,
-              `.film-details__user-rating-score`,
-              `rating`, true);
+      blockRating(popupContainer, `.film-details__user-rating-score`);
+      card.rating = data.rating;
 
-            rating[`rating`].update(newCard);
-          })
-          .then(stopLoader)
-          .catch(() => {
+      Api.updateCard({id: card.id, data: card.toRAW()})
+        .then((newCard) => load(newCard))
 
-            popupContainer.shake();
-            unblock(popupContainer, `.film-details__user-rating-score`,
-              `rating`, false);
-          });
+        .then((newCard) => {
+          const rating = producedPopupBuilders.find((it) => it[`rating`]);
 
-      };
+          unblockRating(popupContainer,
+            `.film-details__user-rating-score`, true);
 
-      popupContainer.onControls = (target) => {
+          rating[`rating`].update(newCard);
+        })
+        .catch(() => {
 
-        card.isWatched = target.isWatched;
-        card.willWatch = target.willWatch;
-        card.isFavorite = target.isFavorite;
+          popupContainer.shake();
+          unblockRating(popupContainer,
+            `.film-details__user-rating-score`, false);
+        });
+    };
 
-        popupContainer.update(card);
-      };
+    popupContainer.onControls = (target) => {
 
-      popupContainer.onClose = () => {
-        cardContainer.bind();
+      card.isWatched = target.isWatched;
+      card.willWatch = target.willWatch;
+      card.isFavorite = target.isFavorite;
 
-        body.removeEventListener('keydown', formSubmission);
-        body.removeChild(popupContainer.element);
-        popupContainer.unrender();
-      };
-    }
+      popupContainer.update(card);
+    };
+
+    popupContainer.onUndo = (target) => {
+
+      blockUndo(popupContainer, target);
+      card.comments.pop();
+
+      Api.updateCard({id: card.id, data: card.toRAW()})
+        .then((newCard) => load(newCard))
+
+        .then((newCard) => {
+          const comment = producedPopupBuilders.find((it) => it[`comment`]);
+
+          unblockUndo(popupContainer,
+            target, true);
+
+          cardContainer.update(newCard);
+          comment[`comment`].update(newCard);
+          popupContainer.update(newCard);
+          popupContainer.disable();
+
+        })
+        .catch(() => {
+
+          popupContainer.shake();
+          unblockUndo(popupContainer,
+            target, false);
+        });
+    };
+
+    popupContainer.onClose = () => {
+      cardContainer.bind();
+
+      body.removeEventListener(`keydown`, formSubmit);
+      body.removeEventListener(`keydown`, popupHide);
+      body.removeChild(popupContainer.element);
+      popupContainer.unrender();
+    };
   };
-  renderCards();
-}
-
-
-
-
-
-
-
-
-
-
+  renderCard();
+};

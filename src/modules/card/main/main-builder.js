@@ -7,6 +7,8 @@ export default (card, container) => {
     duration, genre, image, description
   } = card;
 
+
+
   const durationFormat = getHoursMinutes(duration);
   const releaseYear = getYear(releaseDate);
 

@@ -1,6 +1,7 @@
 import moment from 'moment';
 import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duration-format';
 momentDurationFormatSetup(moment);
+import {Sort} from './../../data';
 
 export const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
@@ -10,11 +11,31 @@ export const checkStatus = (response) => {
   }
 };
 
+export const invert = (object) => {
+  const newObject = {};
+
+  for (const prop in object) {
+    if (object.hasOwnProperty(prop)) {
+      newObject[object[prop]] = prop;
+    }
+  }
+  return newObject;
+};
+
+export const getDescendingArrayByKey = (array, key, limit) => {
+  return array.sort((a, b) => {
+    const first = key === Sort.MOST_COMMENTED ? a[key].length : a[key];
+    const second = key === Sort.MOST_RATED ? b[key].length : b[key];
+
+    return second > first;
+  }).slice(0, limit);
+};
+
 export const toJSON = (response) => {
   return response.json();
 };
 
-const getHistoryList = (cards) => {
+export const getHistoryList = (cards) => {
   return cards.filter((it) => it.isWatched === true);
 };
 
@@ -28,8 +49,16 @@ const getFavoritesList = (cards) => {
 
 const getArrayMax = (array) => {
   return array.reduce((p, v) => {
-    return (p > v ? p : v);
-  })
+
+    if (p > v) {
+      return p;
+    }
+    return v;
+    });
+};
+
+export const getSlicedArray = (array, start, end) => {
+  return array.slice(start, end);
 };
 
 export const getCommentDate = (timeStamp) => {
@@ -62,7 +91,7 @@ export const getCommentDate = (timeStamp) => {
 
 export const getHoursValue = (string) => {
   return [...string].slice(
-    0, string.indexOf(`h`)).join(``);
+      0, string.indexOf(`h`)).join(``);
 };
 
 export const getMinutesValue = (string) => {
@@ -70,6 +99,7 @@ export const getMinutesValue = (string) => {
   return [...string].slice(
     startIndex, string.indexOf(`m`)).join(``);
 };
+
 
 export const getHoursMinutes = (minutes) => {
   return moment.duration(minutes, `minutes`).format(`h[h] m[m]`);
@@ -112,14 +142,33 @@ export const getCardsTotalDuration = (array) => {
 
 
 export const getCardsTopGenre = (object) => {
+
+  console.log(object);
   const entries = [...Object.entries(object)];
+
   const topCount = getArrayMax([...Object.values(object)]);
 
   return entries.find((it) => it[1] === topCount)[0];
 };
 
 export const getYear = (timestamp) => {
-  return new Date(timestamp).getFullYear();
+  return moment(`${timestamp}`, `x`).format('DD MMM YYYY');
+};
+
+export const getProfile = (array) => {
+  const filmsCount = getHistoryList(array).length;
+
+  if (filmsCount >= 21) {
+    return `movie buff`;
+  }
+  if (filmsCount >= 11) {
+    return `fan`;
+  }
+  if (filmsCount >= 1) {
+    return `novice`;
+  }
+
+  return ``;
 };
 
 export const getFilteredCards = (cards, filterName) => {
