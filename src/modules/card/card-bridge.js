@@ -1,3 +1,4 @@
+import moment from 'moment';
 import CardContainer from './container/container-concreter';
 import PopupContainer from './../popup/container/container-concreter';
 
@@ -136,6 +137,9 @@ export default (scaffolding) => {
       card.isWatched = target.isWatched;
       card.willWatch = target.willWatch;
       card.isFavorite = target.isFavorite;
+
+      card.willWatchDate = target.willWatch ?
+        moment().valueOf() : target.willWatchDate;
 
       popupContainer.update(card);
     };

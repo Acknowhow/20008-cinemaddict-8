@@ -13,7 +13,7 @@ import {
   getMinutesValue,
   getCardsTopGenre,
   getCardsByGenreSorted,
-  getSlicedArray, getProfile
+  getSlicedArray, getProfile, getFilteredStats
 } from './../assets/handler';
 
 import buildCard from './card/card-builder';
@@ -54,51 +54,61 @@ export default () => {
   let cardsFilteredTotal = [];
   let cardsToDisplay = [];
 
+  let cardsStatisticTotal = [];
+  let cardsCount = [];
+
+  let cardsTotalDuration = [];
+  let hoursDuration = ``;
+  let minutesDuration = ``;
+
   const stopLoader = loader();
   Api.getCards()
     .then((loadedCards) => {
 
       cardsTotal = loadedCards;
 
+
       const search = buildSearch(searchContainer);
       const show = buildShow(films);
-      const profileState = getProfile(cardsTotal);
 
-      const cardsByGenreCounted = getCardsByGenreCounted(
-        getCardsByGenre(cardsTotal));
 
-      const {
+      cardsStatisticTotal = cardsTotal;
+      let profileState = getProfile(cardsStatisticTotal);
+
+      let cardsByGenreCounted = getCardsByGenreCounted(
+          getCardsByGenre(cardsStatisticTotal));
+
+      let {
         genresArray,
         genresCountArray
       } = getCardsByGenreSorted(cardsByGenreCounted);
 
-      const watchedCardsTotalCount = getWatchedCardsTotalCount(loadedCards);
-      const cardsTotalDuration = getCardsTotalDuration(loadedCards);
+      cardsCount = getWatchedCardsTotalCount(cardsStatisticTotal);
 
-      const hoursDuration = getHoursValue(cardsTotalDuration);
-      const minutesDuration = getMinutesValue(cardsTotalDuration);
+      cardsTotalDuration = getCardsTotalDuration(cardsStatisticTotal);
 
-      buildProfile(profileState, profileContainer);
+      hoursDuration = getHoursValue(cardsTotalDuration);
+      minutesDuration = getMinutesValue(cardsTotalDuration);
+
+
+      const profile = buildProfile(profileState, profileContainer);
       const statisticContainer = buildStatisticContainer(films);
 
       const filterContainer = buildFilterContainer(
-        main, getFiltersState(cardsTotal, filters));
+          main, getFiltersState(cardsTotal, filters));
 
 
-      // statisticList.insertAdjacentHTML(`beforeend`, concreteStatistic(
-      //     watchedCardsTotalCount, hoursValue, minutesValue, cardsTopGenre));
+      let cardsTopGenre = getCardsTopGenre(cardsByGenreCounted);
 
-      // chart(statisticCtx, genresArray, genresCountArray);
+      const rank = buildStatisticRank(statisticContainer.element,
+          cardsTopGenre);
 
-
-      const cardsTopGenre = getCardsTopGenre(cardsByGenreCounted);
-      const statisticRank = buildStatisticRank(statisticContainer.element,
-        cardsTopGenre);
       const statisticFilter = buildStatisticFilter(statisticContainer.element,
-        statisticFilters);
-      const statisticList = buildStatisticList(statisticContainer.element,
-        {totalCount: watchedCardsTotalCount, hoursDuration, minutesDuration,
-          genre: cardsTopGenre});
+          statisticFilters);
+
+      buildStatisticList(statisticContainer.element,
+          {totalCount: cardsCount, hoursDuration, minutesDuration,
+            genre: cardsTopGenre});
 
       const statisticChart = buildStatisticChart(statisticContainer.element);
       const statisticCanvas = statisticChart.element.querySelector(`.statistic__chart`);
@@ -132,7 +142,6 @@ export default () => {
         const filteredCards = getFilteredCards(cardsTotal, currentTarget);
 
         if (filteredCards !== `stats`) {
-          statisticRank.unbind();
           statisticFilter.unbind();
 
           if (films.classList.contains(`visually-hidden`)) {
@@ -155,21 +164,30 @@ export default () => {
 
           buildCard(cardsToDisplay, cardsTotal, Api);
         } else {
-
-          statisticRank.bind();
           statisticFilter.bind();
 
           statisticFilter.onFilter = (statisticFilterTarget) => {
 
+            cardsStatisticTotal = getFilteredStats(cardsTotal, statisticFilterTarget);
+            cardsByGenreCounted = getCardsByGenreCounted(
+              getCardsByGenre(cardsStatisticTotal));
+
+            let {
+              genresArray: genresTargetArray,
+              genresCountArray: genresCountTargetArray} = getCardsByGenreSorted(cardsByGenreCounted);
+
+            cardsTopGenre = getCardsTopGenre(cardsByGenreCounted);
+
+            rank.update(cardsTopGenre);
+
             statisticFilter.updateState(statisticFilterTarget);
+            chart(statisticCanvas, genresTargetArray, genresCountTargetArray);
 
-          }
+          };
 
-          // statisticList.innerHTML = ``;
           if (statisticContainer.element.classList.contains(`visually-hidden`)) {
             statisticContainer.element.classList.remove(`visually-hidden`);
 
-            // statisticFilters.classList.remove(`visually-hidden`);
             films.classList.add(`visually-hidden`);
           }
         }

@@ -3,6 +3,51 @@ import momentDurationFormatSetup from 'moment-duration-format/lib/moment-duratio
 momentDurationFormatSetup(moment);
 import {Sort} from './../../data';
 
+const getWatchList = (cards) => {
+  return cards.filter((it) => it.willWatch === true);
+};
+
+const getFavoritesList = (cards) => {
+  return cards.filter((it) => it.isFavorite === true);
+};
+
+const getArrayMax = (array) => {
+  return array.reduce((p, v) => {
+
+    if (p > v) {
+      return p;
+    }
+    return v;
+  });
+};
+
+const getWatchedFilmsByPeriod = (array, period) => {
+
+  return array.filter((it) => {
+    return it.willWatchDate !== null
+  })
+    .filter((it) => {
+
+    return it.willWatchDate >= period.start &&
+      it.willWatchDate <= period.now;
+  })
+};
+
+const getTimePeriod = (periodName) => {
+  const objectPeriod = {
+    start: () => moment().startOf(`${periodName}`)
+      .valueOf(),
+    now: () => moment().valueOf()
+  };
+
+  const start = objectPeriod.start();
+  const now = objectPeriod.now();
+
+  console.log({start, now});
+  return {start, now};
+
+};
+
 export const checkStatus = (response) => {
   if (response.status >= 200 && response.status < 300) {
     return response;
@@ -37,24 +82,6 @@ export const toJSON = (response) => {
 
 export const getHistoryList = (cards) => {
   return cards.filter((it) => it.isWatched === true);
-};
-
-const getWatchList = (cards) => {
-  return cards.filter((it) => it.willWatch === true);
-};
-
-const getFavoritesList = (cards) => {
-  return cards.filter((it) => it.isFavorite === true);
-};
-
-const getArrayMax = (array) => {
-  return array.reduce((p, v) => {
-
-    if (p > v) {
-      return p;
-    }
-    return v;
-  });
 };
 
 export const getSlicedArray = (array, start, end) => {
@@ -127,6 +154,7 @@ export const getCardsByGenreCounted = (cards) => {
   }, {});
 };
 
+
 export const getCardsByGenreSorted = (object) => {
   const sorted = Object.entries(object).sort((a, b) => a[1] < b[1]);
   const genresArray = sorted.map((it) => it[0]);
@@ -148,6 +176,9 @@ export const getCardsTotalDuration = (array) => {
 export const getCardsTopGenre = (object) => {
 
   const entries = [...Object.entries(object)];
+  if (entries.length === 0) {
+    return ``;
+  }
 
   const topCount = getArrayMax([...Object.values(object)]);
 
@@ -177,10 +208,26 @@ export const getProfile = (array) => {
 export const getFilteredStats = (genres, filterName) => {
 
   switch (filterName) {
+    case `year`:
+      return getWatchedFilmsByPeriod(genres,
+        getTimePeriod(`year`));
 
+    case `month`:
+      return getWatchedFilmsByPeriod(genres,
+        getTimePeriod(`month`));
+
+    case `week`:
+      return getWatchedFilmsByPeriod(genres,
+        getTimePeriod(`week`));
+
+    case `today`:
+      return getWatchedFilmsByPeriod(genres,
+        getTimePeriod(`today`));
+
+    default:
+      return genres;
   }
-
-}
+};
 
 export const getFilteredCards = (cards, filterName) => {
   const filterNameToLowerCase = filterName.toLowerCase();
