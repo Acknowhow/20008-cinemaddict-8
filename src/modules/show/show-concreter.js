@@ -8,28 +8,12 @@ export default class Container extends Component {
     this._onShowButtonClick = this._onShowButtonClick.bind(this);
   }
 
-  _onShowButtonClick(e) {
-    e.stopPropagation();
-
-    if (typeof this._onShow === `function`) {
-      this._onShow();
-    }
-  }
-
   set onShow(fn) {
     this._onShow = fn;
   }
 
   get template() {
     return `<button class="films-list__show-more">Show more</button>`;
-  }
-
-  bind() {
-    this._element.addEventListener(`click`, this._onShowButtonClick);
-  }
-
-  unbind() {
-    this._element.removeEventListener(`click`, this._onShowButtonClick);
   }
 
   checkState(cards, index) {
@@ -41,6 +25,22 @@ export default class Container extends Component {
       if (this._element.classList.contains(`visually-hidden`)) {
         this._element.classList.remove(`visually-hidden`);
       }
+    }
+  }
+
+  bind() {
+    this._element.addEventListener(`click`, this._onShowButtonClick);
+  }
+
+  unbind() {
+    this._element.removeEventListener(`click`, this._onShowButtonClick);
+  }
+
+  _onShowButtonClick(e) {
+    e.stopPropagation();
+
+    if (typeof this._onShow === `function`) {
+      this._onShow();
     }
   }
 }

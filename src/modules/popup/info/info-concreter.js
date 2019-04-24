@@ -19,10 +19,6 @@ export default class Info extends Component {
     this._genre = data.genre;
   }
 
-  _getGenres() {
-    return this._genre.map((it) => `<span class="film-details__genre">${it}</span>`);
-  }
-
   get template() {
     return `<div>
               <div class="film-details__poster">
@@ -78,5 +74,9 @@ export default class Info extends Component {
                 <p class="film-details__film-description">${this._description}</p>
               </div>
             </div>`;
+  }
+
+  _getGenres() {
+    return this._genre.map((it) => `<span class="film-details__genre">${it}</span>`);
   }
 }

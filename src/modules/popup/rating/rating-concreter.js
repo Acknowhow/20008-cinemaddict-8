@@ -8,6 +8,10 @@ export default class Rating extends Component {
     this._ratings = ratings;
   }
 
+  get template() {
+    return `<div>${this._getRatings().join(``)}</div>`;
+  }
+
   _partialUpdate() {
     this._element.innnerHTML = this.template;
   }
@@ -18,10 +22,6 @@ export default class Rating extends Component {
       value="${it}" id="rating-${it}" ${parseInt(it, 10) === this._rating ? `checked` : ``}">
       <label class="film-details__user-rating-label" for="rating-${it}">${it}</label>`
     );
-  }
-
-  get template() {
-    return `<div>${this._getRatings().join(``)}</div>`;
   }
 
   update(data) {

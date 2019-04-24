@@ -9,6 +9,37 @@ export default class Comment extends Component {
     this._comments = comments;
   }
 
+  get template() {
+    return `
+      <div>
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
+        
+        <ul class="film-details__comments-list">${this._getUserComments().join(``)}</ul>
+        
+        <div class="film-details__new-comment">
+          <div>
+            <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
+            <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
+  
+            <div class="film-details__emoji-list">${this._getComments().join(``)}</div>
+          </div>
+          <label class="film-details__comment-label">
+            <textarea 
+              class="film-details__comment-input" 
+              placeholder="← Select reaction, add comment here" 
+              name="comment">
+            </textarea>
+          </label>
+        </div>
+      </div>`;
+  }
+
+  update(data) {
+    this._comments = data.comments;
+
+    this._partialUpdate();
+  }
+
   _getUserComments() {
 
     return this._comments.map((value, key) => {
@@ -51,34 +82,4 @@ export default class Comment extends Component {
     this._element.innerHTML = this.template;
   }
 
-  get template() {
-    return `
-      <div>
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${this._comments.length}</span></h3>
-        
-        <ul class="film-details__comments-list">${this._getUserComments().join(``)}</ul>
-        
-        <div class="film-details__new-comment">
-          <div>
-            <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
-            <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
-  
-            <div class="film-details__emoji-list">${this._getComments().join(``)}</div>
-          </div>
-          <label class="film-details__comment-label">
-            <textarea 
-              class="film-details__comment-input" 
-              placeholder="← Select reaction, add comment here" 
-              name="comment">
-            </textarea>
-          </label>
-        </div>
-      </div>`;
-  }
-
-  update(data) {
-    this._comments = data.comments;
-
-    this._partialUpdate();
-  }
 }

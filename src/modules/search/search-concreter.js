@@ -8,15 +8,6 @@ export default class Container extends Component {
     this._onInputKeyUp = this._onInputKeyUp.bind(this);
   }
 
-  _onInputKeyUp(e) {
-
-    const {target} = e;
-
-    if (typeof this._onInput === `function`) {
-      this._onInput(target);
-    }
-  }
-
   set onInput(fn) {
     this._onInput = fn;
   }
@@ -37,5 +28,14 @@ export default class Container extends Component {
   unbind() {
     this._element.querySelector(`.search__field`)
       .removeEventListener(`keydown`, this._onInputKeyUp);
+  }
+
+  _onInputKeyUp(e) {
+
+    const {target} = e;
+
+    if (typeof this._onInput === `function`) {
+      this._onInput(target);
+    }
   }
 }

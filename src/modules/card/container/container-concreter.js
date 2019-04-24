@@ -9,23 +9,9 @@ export default class Container extends Component {
     this._onCommentsButtonClick = this._onCommentsButtonClick.bind(this);
   }
 
-  _onCommentsButtonClick(e) {
-    e.preventDefault();
-
-    if (typeof this._onComments === `function`) {
-      this._onComments();
-    }
-  }
-
-  _partialUpdate() {
-    this._element.querySelector(`.film-card__comments`).innerHTML =
-      `${this._comments.length} comments`;
-  }
-
   set onComments(fn) {
     this._onComments = fn;
   }
-
 
   get template() {
     return `<article class="film-card film-card">
@@ -39,6 +25,18 @@ export default class Container extends Component {
           </article>`;
   }
 
+  update(data) {
+    this._comments = data.comments;
+
+    this._partialUpdate();
+    this.bind();
+  }
+
+  _partialUpdate() {
+    this._element.querySelector(`.film-card__comments`).innerHTML =
+      `${this._comments.length} comments`;
+  }
+
   bind() {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onCommentsButtonClick);
@@ -50,10 +48,11 @@ export default class Container extends Component {
       .removeEventListener(`click`, this._onCommentsButtonClick);
   }
 
-  update(data) {
-    this._comments = data.comments;
+  _onCommentsButtonClick(e) {
+    e.preventDefault();
 
-    this._partialUpdate();
-    this.bind();
+    if (typeof this._onComments === `function`) {
+      this._onComments();
+    }
   }
 }

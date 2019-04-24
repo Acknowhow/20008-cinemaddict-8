@@ -26,115 +26,6 @@ export default class Container extends Component {
     this._onUndoButtonClick = this._onUndoButtonClick.bind(this);
   }
 
-  _processForm(formData) {
-    const entry = {
-      'comment': {
-        'author': this._element.querySelector(`.film-details__comment-author`).innerHTML,
-        'date': moment().valueOf(),
-        'comment': ``,
-        'emotion': ``,
-      }
-    };
-
-    const FormMapper = Container.formMapper(entry);
-    for (const pair of formData.entries()) {
-
-      const [property, value] = pair;
-      if (FormMapper[property]) {
-
-        value.trim();
-        FormMapper[property](value);
-      }
-    }
-
-    return entry;
-  }
-
-  _onSubmitAction() {
-
-    const formData = new FormData(
-        this._element.querySelector(`.film-details__inner`));
-
-    const newData = this._processForm(formData);
-
-    if (typeof this._onSubmit === `function`) {
-      this._onSubmit(newData);
-    }
-  }
-
-  _onCloseKeyAction() {
-    if (typeof this._onCloseKey === `function`) {
-      this._onCloseKey();
-    }
-  }
-
-  _onCloseButtonClick(e) {
-    e.preventDefault();
-
-    if (typeof this._onCloseButton === `function`) {
-      this._onCloseButton();
-    }
-  }
-
-  _onRatingButtonClick(e) {
-    e.preventDefault();
-
-    const entry = {
-      rating: null
-    };
-
-    const {target} = e;
-
-    if (typeof this._onRating === `function` &&
-      target.tagName.toUpperCase() === `LABEL`) {
-
-      const ratingValue = target.attributes[`for`].nodeValue;
-      const ratingInput = this._element.querySelector(`#${ratingValue}`);
-
-      entry.rating = parseInt(ratingInput.value, 10);
-      ratingInput.checked = true;
-
-      this._onRating(entry);
-    }
-  }
-
-  _onControlsButtonClick(e) {
-    e.preventDefault();
-
-    const entry = {
-      willWatch: this._willWatch,
-      isWatched: this._isWatched,
-      isFavorite: this._isFavorite
-    };
-    const {target} = e;
-
-    if (typeof this._onControls === `function` &&
-      target.tagName.toUpperCase() === `LABEL`) {
-
-      const controlValue = target.attributes[`for`].nodeValue;
-      const controlInput = this._element.querySelector(`#${controlValue}`);
-
-      const ContainerIsChecked = Container.getInputState(controlInput);
-      const StateMapper = Container.stateMapper(entry);
-
-      StateMapper[controlValue](ContainerIsChecked);
-
-      this._onControls(entry);
-    }
-  }
-
-  _onUndoButtonClick(e) {
-    e.preventDefault();
-
-    const {target} = e;
-
-    if (typeof this._onUndo === `function` &&
-      target.tagName.toUpperCase() === `BUTTON`) {
-
-      this._onUndo(target);
-    }
-  }
-
   set onRating(fn) {
     this._onRating = fn;
   }
@@ -221,6 +112,93 @@ export default class Container extends Component {
       </section>`;
   }
 
+  enable() {
+    this._element.querySelector(`
+      .film-details__watched-reset`).classList.remove(`visually-hidden`);
+  }
+
+  disable() {
+    this._element.querySelector(`
+      .film-details__watched-reset`).classList.add(`visually-hidden`);
+  }
+
+  shake() {
+    const ANIMATION_TIMEOUT = 600;
+    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._element.style.animation = ``;
+    }, ANIMATION_TIMEOUT);
+  }
+
+  updateState() {
+    const watchState = this._element.querySelector(`
+      .film-details__watched-status`);
+
+    Container.checkState(watchState);
+
+    if (this._isWatched) {
+      watchState.classList.add(`film-details__watched-status--active`);
+      watchState.innerHTML = `Already watched`;
+    }
+
+    if (this._willWatch && !this._isWatched) {
+      watchState.classList.add(`film-details__watched-status--active`);
+      watchState.innerHTML = `Will watch`;
+    }
+
+    if (!this._isWatched && !this._willWatch) {
+      watchState.innerHTML = ``;
+    }
+  }
+
+  update(data) {
+    this._isFavorite = data.isFavorite;
+    this._willWatch = data.willWatch;
+    this._isWatched = data.isWatched;
+
+    this.unbind();
+    this.updateState();
+    this.bind();
+  }
+
+  _processForm(formData) {
+    const entry = {
+      'comment': {
+        'author': this._element.querySelector(`.film-details__comment-author`).innerHTML,
+        'date': moment().valueOf(),
+        'comment': ``,
+        'emotion': ``,
+      }
+    };
+
+    const FormMapper = Container.formMapper(entry);
+    for (const pair of formData.entries()) {
+
+      const [property, value] = pair;
+      if (FormMapper[property]) {
+
+        value.trim();
+        FormMapper[property](value);
+      }
+    }
+
+    return entry;
+  }
+
+  _onSubmitAction() {
+
+    const formData = new FormData(
+        this._element.querySelector(`.film-details__inner`));
+
+    const newData = this._processForm(formData);
+
+    if (typeof this._onSubmit === `function`) {
+      this._onSubmit(newData);
+    }
+  }
+
+
   bind() {
     this._element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._onCloseButtonClick);
@@ -244,6 +222,79 @@ export default class Container extends Component {
 
     this._element.querySelector(`.film-details__user-rating-score`)
       .removeEventListener(`click`, this._onRatingButtonClick);
+  }
+
+  _onCloseKeyAction() {
+    if (typeof this._onCloseKey === `function`) {
+      this._onCloseKey();
+    }
+  }
+
+  _onCloseButtonClick(e) {
+    e.preventDefault();
+
+    if (typeof this._onCloseButton === `function`) {
+      this._onCloseButton();
+    }
+  }
+
+  _onRatingButtonClick(e) {
+    e.preventDefault();
+
+    const entry = {
+      rating: null
+    };
+
+    const {target} = e;
+
+    if (typeof this._onRating === `function` &&
+      target.tagName.toUpperCase() === `LABEL`) {
+
+      const ratingValue = target.attributes[`for`].nodeValue;
+      const ratingInput = this._element.querySelector(`#${ratingValue}`);
+
+      entry.rating = parseInt(ratingInput.value, 10);
+      ratingInput.checked = true;
+
+      this._onRating(entry);
+    }
+  }
+
+  _onControlsButtonClick(e) {
+    e.preventDefault();
+
+    const entry = {
+      willWatch: this._willWatch,
+      isWatched: this._isWatched,
+      isFavorite: this._isFavorite
+    };
+    const {target} = e;
+
+    if (typeof this._onControls === `function` &&
+      target.tagName.toUpperCase() === `LABEL`) {
+
+      const controlValue = target.attributes[`for`].nodeValue;
+      const controlInput = this._element.querySelector(`#${controlValue}`);
+
+      const ContainerIsChecked = Container.getInputState(controlInput);
+      const StateMapper = Container.stateMapper(entry);
+
+      StateMapper[controlValue](ContainerIsChecked);
+
+      this._onControls(entry);
+    }
+  }
+
+  _onUndoButtonClick(e) {
+    e.preventDefault();
+
+    const {target} = e;
+
+    if (typeof this._onUndo === `function` &&
+      target.tagName.toUpperCase() === `BUTTON`) {
+
+      this._onUndo(target);
+    }
   }
 
   static checkState(watchState) {
@@ -295,55 +346,5 @@ export default class Container extends Component {
       isChecked = true;
     }
     return isChecked;
-  }
-
-  enable() {
-    this._element.querySelector(`
-      .film-details__watched-reset`).classList.remove(`visually-hidden`);
-  }
-
-  disable() {
-    this._element.querySelector(`
-      .film-details__watched-reset`).classList.add(`visually-hidden`);
-  }
-
-  shake() {
-    const ANIMATION_TIMEOUT = 600;
-    this._element.style.animation = `shake ${ANIMATION_TIMEOUT / 1000}s`;
-
-    setTimeout(() => {
-      this._element.style.animation = ``;
-    }, ANIMATION_TIMEOUT);
-  }
-
-  updateState() {
-    const watchState = this._element.querySelector(`
-      .film-details__watched-status`);
-
-    Container.checkState(watchState);
-
-    if (this._isWatched) {
-      watchState.classList.add(`film-details__watched-status--active`);
-      watchState.innerHTML = `Already watched`;
-    }
-
-    if (this._willWatch && !this._isWatched) {
-      watchState.classList.add(`film-details__watched-status--active`);
-      watchState.innerHTML = `Will watch`;
-    }
-
-    if (!this._isWatched && !this._willWatch) {
-      watchState.innerHTML = ``;
-    }
-  }
-
-  update(data) {
-    this._isFavorite = data.isFavorite;
-    this._willWatch = data.willWatch;
-    this._isWatched = data.isWatched;
-
-    this.unbind();
-    this.updateState();
-    this.bind();
   }
 }

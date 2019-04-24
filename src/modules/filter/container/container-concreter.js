@@ -11,17 +11,34 @@ export default class Container extends Component {
     this._onFilterButtonClick = this._onFilterButtonClick.bind(this);
   }
 
-  _onFilterButtonClick(e) {
-    e.preventDefault();
+  set onFilter(fn) {
+    this._onFilter = fn;
+  }
 
-    const {target} = e;
+  get template() {
+    return `<nav class="main-navigation">${this._getFilters().join(``)}</nav>`;
+  }
 
-    if (typeof this._onFilter === `function` &&
-      target.tagName.toUpperCase() === `A`) {
+  updateState(target) {
+    const invertFilter = invert(Filter);
 
-      const filterValue = target.attributes[`href`].nodeValue;
-      this._onFilter(Filter[filterValue]);
+    const currentFilter = this._element.querySelector(`a[href='${invertFilter[target]}']`);
+    const filters = this._element.querySelectorAll(`.main-navigation__item`);
+
+    for (const filter of filters) {
+      if (filter.classList.contains(`main-navigation__item--active`)) {
+        filter.classList.remove(`main-navigation__item--active`);
+      }
     }
+    currentFilter.classList.add(`main-navigation__item--active`);
+  }
+
+  update(filters) {
+    this._filters = filters;
+
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
   }
 
   _partialUpdate() {
@@ -46,14 +63,6 @@ export default class Container extends Component {
     });
   }
 
-  set onFilter(fn) {
-    this._onFilter = fn;
-  }
-
-  get template() {
-    return `<nav class="main-navigation">${this._getFilters().join(``)}</nav>`;
-  }
-
   bind() {
     this._element.addEventListener(`click`, this._onFilterButtonClick);
   }
@@ -62,25 +71,16 @@ export default class Container extends Component {
     this._element.removeEventListener(`click`, this._onFilterButtonClick);
   }
 
-  updateState(target) {
-    const invertFilter = invert(Filter);
+  _onFilterButtonClick(e) {
+    e.preventDefault();
 
-    const currentFilter = this._element.querySelector(`a[href='${invertFilter[target]}']`);
-    const filters = this._element.querySelectorAll(`.main-navigation__item`);
+    const {target} = e;
 
-    for (const filter of filters) {
-      if (filter.classList.contains(`main-navigation__item--active`)) {
-        filter.classList.remove(`main-navigation__item--active`);
-      }
+    if (typeof this._onFilter === `function` &&
+      target.tagName.toUpperCase() === `A`) {
+
+      const filterValue = target.attributes[`href`].nodeValue;
+      this._onFilter(Filter[filterValue]);
     }
-    currentFilter.classList.add(`main-navigation__item--active`);
-  }
-
-  update(filters) {
-    this._filters = filters;
-
-    this.unbind();
-    this._partialUpdate();
-    this.bind();
   }
 }
