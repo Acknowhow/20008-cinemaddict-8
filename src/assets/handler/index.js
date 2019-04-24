@@ -174,6 +174,14 @@ export const getProfile = (array) => {
   return ``;
 };
 
+export const getFilteredStats = (genres, filterName) => {
+
+  switch (filterName) {
+
+  }
+
+}
+
 export const getFilteredCards = (cards, filterName) => {
   const filterNameToLowerCase = filterName.toLowerCase();
 

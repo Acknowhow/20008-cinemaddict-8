@@ -44,6 +44,14 @@ export const Filter = {
   [`#stats`]: `stats`
 };
 
+export const StatisticFilter = {
+  [`statistic-all-time`]: `all-time`,
+  [`statistic-today`]: `today`,
+  [`statistic-week`]: `week`,
+  [`statistic-month`]: `month`,
+  [`statistic-year`]: `year`
+};
+
 export const filters = [
   {
     name: `All movies`,

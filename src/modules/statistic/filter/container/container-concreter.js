@@ -1,4 +1,5 @@
 import Component from '../../../../assets/concreter';
+import {StatisticFilter} from '../../../../data';
 
 export default class Container extends Component {
   constructor(filters) {
@@ -22,9 +23,18 @@ export default class Container extends Component {
      </form>`;
   }
 
-  update(data) {
-    this._rank = data;
-    this._partialUpdate();
+  updateState(target) {
+
+    const currentFilterInput = this._element.querySelector(`#statistic-${target}`);
+    const filterInputs = this._element.querySelectorAll(`.statistic__filters-input`);
+
+    for (const input of filterInputs) {
+      if (input.hasAttribute(`checked`)) {
+        input.removeAttribute(`checked`);
+      }
+    }
+
+    currentFilterInput.setAttribute(`checked`, `checked`);
   }
 
 
@@ -48,8 +58,6 @@ export default class Container extends Component {
     })
   }
 
-  _partialUpdate() {
-  }
 
   bind() {
     this._element.addEventListener(`click`, this._onFilterButtonClick);
@@ -68,7 +76,7 @@ export default class Container extends Component {
       target.tagName.toUpperCase() === `LABEL`) {
 
       const filterValue = target.attributes[`for`].nodeValue;
-      this._onFilter(filterValue);
+      this._onFilter(StatisticFilter[filterValue]);
     }
   }
 }

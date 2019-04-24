@@ -25,6 +25,8 @@ import buildProfile from './profile/profile-builder';
 import buildStatisticContainer from './statistic/container/container-builder';
 import buildStatisticRank from './statistic/rank/rank-builder';
 import buildStatisticFilter from './statistic/filter/container/container-builder';
+import buildStatisticList from './statistic/list/container/container-builder';
+import buildStatisticChart from './statistic/chart/chart-builder';
 
 const body = document.querySelector(`body`);
 const searchContainer = body.querySelector(`.header__search`);
@@ -62,20 +64,46 @@ export default () => {
       const show = buildShow(films);
       const profileState = getProfile(cardsTotal);
 
-      buildProfile(profileState, profileContainer);
+      const cardsByGenreCounted = getCardsByGenreCounted(
+        getCardsByGenre(cardsTotal));
 
+      const {
+        genresArray,
+        genresCountArray
+      } = getCardsByGenreSorted(cardsByGenreCounted);
+
+      const watchedCardsTotalCount = getWatchedCardsTotalCount(loadedCards);
+      const cardsTotalDuration = getCardsTotalDuration(loadedCards);
+
+      const hoursDuration = getHoursValue(cardsTotalDuration);
+      const minutesDuration = getMinutesValue(cardsTotalDuration);
+
+      buildProfile(profileState, profileContainer);
       const statisticContainer = buildStatisticContainer(films);
 
       const filterContainer = buildFilterContainer(
         main, getFiltersState(cardsTotal, filters));
 
-      const cardsByGenreCounted = getCardsByGenreCounted(
-        getCardsByGenre(cardsTotal));
+
+      // statisticList.insertAdjacentHTML(`beforeend`, concreteStatistic(
+      //     watchedCardsTotalCount, hoursValue, minutesValue, cardsTopGenre));
+
+      // chart(statisticCtx, genresArray, genresCountArray);
+
 
       const cardsTopGenre = getCardsTopGenre(cardsByGenreCounted);
-      const statisticRank = buildStatisticRank(statisticContainer.element, cardsTopGenre);
-      const statisticFilter = buildStatisticFilter(statisticContainer.element, statisticFilters);
+      const statisticRank = buildStatisticRank(statisticContainer.element,
+        cardsTopGenre);
+      const statisticFilter = buildStatisticFilter(statisticContainer.element,
+        statisticFilters);
+      const statisticList = buildStatisticList(statisticContainer.element,
+        {totalCount: watchedCardsTotalCount, hoursDuration, minutesDuration,
+          genre: cardsTopGenre});
 
+      const statisticChart = buildStatisticChart(statisticContainer.element);
+      const statisticCanvas = statisticChart.element.querySelector(`.statistic__chart`);
+
+      chart(statisticCanvas, genresArray, genresCountArray);
 
       show.onShow = () => {
         cardsToDisplayCount += 5;
@@ -98,8 +126,8 @@ export default () => {
         buildCard(searchedCards, cardsTotal, Api);
       };
 
-      filterContainer.onFilter = (target) => {
-        currentTarget = target;
+      filterContainer.onFilter = (filterTarget) => {
+        currentTarget = filterTarget;
 
         const filteredCards = getFilteredCards(cardsTotal, currentTarget);
 
@@ -130,6 +158,13 @@ export default () => {
 
           statisticRank.bind();
           statisticFilter.bind();
+
+          statisticFilter.onFilter = (statisticFilterTarget) => {
+
+            statisticFilter.updateState(statisticFilterTarget);
+
+          }
+
           // statisticList.innerHTML = ``;
           if (statisticContainer.element.classList.contains(`visually-hidden`)) {
             statisticContainer.element.classList.remove(`visually-hidden`);
@@ -137,25 +172,6 @@ export default () => {
             // statisticFilters.classList.remove(`visually-hidden`);
             films.classList.add(`visually-hidden`);
           }
-
-
-
-          // const {
-          //   genresArray,
-          //   genresCountArray
-          // } = getCardsByGenreSorted(cardsByGenreCounted);
-          //
-          // const watchedCardsTotalCount = getWatchedCardsTotalCount(loadedCards);
-          // const cardsTotalDuration = getCardsTotalDuration(loadedCards);
-          //
-          // const hoursValue = getHoursValue(cardsTotalDuration);
-          // const minutesValue = getMinutesValue(cardsTotalDuration);
-          //
-
-          // statisticList.insertAdjacentHTML(`beforeend`, concreteStatistic(
-          //     watchedCardsTotalCount, hoursValue, minutesValue, cardsTopGenre));
-          //
-          // chart(statisticCtx, genresArray, genresCountArray);
         }
       };
       cardsFilteredTotal = cardsTotal;
