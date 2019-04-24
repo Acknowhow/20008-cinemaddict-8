@@ -1,3 +1,5 @@
+import {getWatchedState} from '../assets/handler';
+
 export default class ModelCard {
   constructor(data) {
     this.id = data[`id`];
@@ -19,10 +21,12 @@ export default class ModelCard {
 
     this.rating = data[`user_details`][`personal_rating`];
 
-    this.isWatched = Boolean(data[`user_details`][`already_watched`]);
     this.isFavorite = Boolean(data[`user_details`][`favorite`]);
     this.willWatch = Boolean(data[`user_details`][`watchlist`]);
     this.willWatchDate = data[`user_details`][`watching_date`];
+
+    this.isWatched = getWatchedState(
+      Boolean(data[`user_details`][`already_watched`]), this.willWatchDate);
   }
 
   toRAW() {

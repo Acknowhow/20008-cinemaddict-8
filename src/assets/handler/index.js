@@ -117,6 +117,9 @@ export const getCommentDate = (timeStamp) => {
 };
 
 export const getHoursValue = (string) => {
+  if (string.length < 1) {
+    return `0h`;
+  }
   return [...string].slice(
       0, string.indexOf(`h`)).join(``);
 };
@@ -154,6 +157,19 @@ export const getCardsByGenreCounted = (cards) => {
   }, {});
 };
 
+export const getWatchedState = (isWatched, willWatchDate) => {
+  if (!willWatchDate) {
+    return isWatched;
+  }
+
+  if (moment().valueOf() > willWatchDate) {
+    isWatched = true;
+
+    return isWatched;
+  }
+
+  return isWatched;
+};
 
 export const getCardsByGenreSorted = (object) => {
   const sorted = Object.entries(object).sort((a, b) => a[1] < b[1]);
@@ -167,6 +183,9 @@ export const getWatchedCardsTotalCount = (array) =>
   array.filter((it) => it.isWatched === true).length;
 
 export const getCardsTotalDuration = (array) => {
+  if (array.length < 1) {
+    return `0`;
+  }
   const minutes = array.map((it) => it.duration).reduce((acc, cur) => acc + cur);
 
   return getHoursMinutes(minutes);

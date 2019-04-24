@@ -106,7 +106,7 @@ export default () => {
       const statisticFilter = buildStatisticFilter(statisticContainer.element,
           statisticFilters);
 
-      buildStatisticList(statisticContainer.element,
+      const statisticList = buildStatisticList(statisticContainer.element,
           {totalCount: cardsCount, hoursDuration, minutesDuration,
             genre: cardsTopGenre});
 
@@ -169,6 +169,13 @@ export default () => {
           statisticFilter.onFilter = (statisticFilterTarget) => {
 
             cardsStatisticTotal = getFilteredStats(cardsTotal, statisticFilterTarget);
+
+            cardsCount = getWatchedCardsTotalCount(cardsStatisticTotal);
+            cardsTotalDuration = getCardsTotalDuration(cardsStatisticTotal);
+
+            hoursDuration = getHoursValue(cardsTotalDuration);
+            // minutesDuration = getMinutesValue(cardsTotalDuration);
+
             cardsByGenreCounted = getCardsByGenreCounted(
               getCardsByGenre(cardsStatisticTotal));
 
@@ -179,6 +186,8 @@ export default () => {
             cardsTopGenre = getCardsTopGenre(cardsByGenreCounted);
 
             rank.update(cardsTopGenre);
+            statisticList.update({totalCount: cardsCount, hoursDuration, minutesDuration,
+              genre: cardsTopGenre})
 
             statisticFilter.updateState(statisticFilterTarget);
             chart(statisticCanvas, genresTargetArray, genresCountTargetArray);
