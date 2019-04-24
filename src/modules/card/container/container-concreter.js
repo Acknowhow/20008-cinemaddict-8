@@ -6,11 +6,30 @@ export default class Container extends Component {
     this._comments = comments;
     this._onComments = null;
 
+    this._onWillWatch = null;
+    this._onWatched = null;
+    this._onFavorite = null;
+
     this._onCommentsButtonClick = this._onCommentsButtonClick.bind(this);
+    this._onWillWatchButtonClick = this._onWillWatchButtonClick.bind(this);
+    this._onWatchedButtonClick = this._onWatchedButtonClick.bind(this);
+    this._onFavoriteButtonClick = this._onFavoriteButtonClick.bind(this);
   }
 
   set onComments(fn) {
     this._onComments = fn;
+  }
+
+  set onWillWatch(fn) {
+    this._onWillWatch = fn;
+  }
+
+  set onWatched(fn) {
+    this._onWatched = fn;
+  }
+
+  set onFavorite(fn) {
+    this._onFavorite = fn;
   }
 
   get template() {
@@ -41,11 +60,29 @@ export default class Container extends Component {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onCommentsButtonClick);
 
+    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, this._onWillWatchButtonClick);
+
+    this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, this._onWatchedButtonClick);
+
+    this._element.querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, this._onFavoriteButtonClick);
+
   }
 
   unbind() {
     this._element.querySelector(`.film-card__comments`)
       .removeEventListener(`click`, this._onCommentsButtonClick);
+
+    this._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, this._onWillWatchButtonClick);
+
+    this._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, this._onWatchedButtonClick);
+
+    this._element.querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, this._onFavoriteButtonClick);
   }
 
   _onCommentsButtonClick(e) {
@@ -53,6 +90,38 @@ export default class Container extends Component {
 
     if (typeof this._onComments === `function`) {
       this._onComments();
+    }
+  }
+
+  _onWillWatchButtonClick(e) {
+    e.preventDefault();
+
+    if (typeof this._onWillWatch === `function`) {
+
+      this._onWillWatch(`add-to-watchlist`);
+    }
+
+  }
+
+  _onWatchedButtonClick(e) {
+
+    e.preventDefault();
+
+    if (typeof this._onWatched === `function`) {
+
+
+      this._onWatched(`mark-as-watched`);
+    }
+
+  }
+
+  _onFavoriteButtonClick(e) {
+
+    e.preventDefault();
+
+    if (typeof this._onWatched === `function`) {
+
+      this._onWatched(`favorite`);
     }
   }
 }

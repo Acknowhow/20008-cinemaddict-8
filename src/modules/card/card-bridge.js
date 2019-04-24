@@ -108,6 +108,31 @@ export default (scaffolding) => {
       cardContainer.unbind();
     };
 
+    cardContainer.onWillWatch = () => {
+
+      if (card.willWatch === true) {
+        card.willWatch = false;
+      } else {
+        card.willWatch = true;
+      }
+    };
+
+    container.onWatched = () => {
+      if (card.isWatched === true) {
+        card.willWatch = false;
+      } else {
+        card.willWatch = true;
+      }
+    };
+
+    container.onFavorite = () => {
+      if (card.isFavorite === true) {
+        card.isFavorite = false;
+      } else {
+        card.isFavorite = true;
+      }
+    };
+
     popupContainer.onRating = (data) => {
 
       blockRating(popupContainer, `.film-details__user-rating-score`);

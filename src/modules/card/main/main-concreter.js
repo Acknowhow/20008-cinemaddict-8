@@ -27,4 +27,5 @@ export default class Main extends Component {
         <p class="film-card__description">${this._description}</p>
       </div>`;
   }
+
 }
