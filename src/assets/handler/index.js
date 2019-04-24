@@ -24,13 +24,13 @@ const getArrayMax = (array) => {
 const getWatchedFilmsByPeriod = (array, period) => {
 
   return array.filter((it) => {
-    return it.willWatchDate !== null
+    return it.willWatchDate !== null;
   })
     .filter((it) => {
 
-    return it.willWatchDate >= period.start &&
+      return it.willWatchDate >= period.start &&
       it.willWatchDate <= period.now;
-  })
+    });
 };
 
 const getTimePeriod = (periodName) => {
@@ -43,7 +43,6 @@ const getTimePeriod = (periodName) => {
   const start = objectPeriod.start();
   const now = objectPeriod.now();
 
-  console.log({start, now});
   return {start, now};
 
 };
@@ -232,19 +231,19 @@ export const getFilteredStats = (genres, filterName) => {
   switch (filterName) {
     case `year`:
       return getWatchedFilmsByPeriod(genres,
-        getTimePeriod(`year`));
+          getTimePeriod(`year`));
 
     case `month`:
       return getWatchedFilmsByPeriod(genres,
-        getTimePeriod(`month`));
+          getTimePeriod(`month`));
 
     case `week`:
       return getWatchedFilmsByPeriod(genres,
-        getTimePeriod(`week`));
+          getTimePeriod(`week`));
 
     case `today`:
       return getWatchedFilmsByPeriod(genres,
-        getTimePeriod(`today`));
+          getTimePeriod(`today`));
 
     default:
       return genres;
