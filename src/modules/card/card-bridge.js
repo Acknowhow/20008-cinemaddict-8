@@ -38,7 +38,8 @@ export default (scaffolding) => {
 
 
     const formSubmit = (evt) => {
-      if (evt.ctrlKey === true && evt.keyCode === Key.ENTER) {
+      if ((evt.ctrlKey === true ||
+        evt.metaKey === true) && evt.keyCode === Key.ENTER) {
 
         popupContainer.onSubmit = (newData) => {
 

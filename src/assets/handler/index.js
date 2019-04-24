@@ -106,7 +106,11 @@ export const getHoursMinutes = (minutes) => {
 };
 
 export const getCardsByGenre = (cards) => {
-  return cards.map((it) => it.genre);
+  return cards.map((it) => it.genre).filter((it) => it.length > 0)
+    .reduce((accumulator, currentValue) => {
+
+      return accumulator.concat(currentValue);
+    }, []);
 };
 
 export const getCardsByGenreCounted = (cards) => {
@@ -151,7 +155,7 @@ export const getCardsTopGenre = (object) => {
 };
 
 export const getYear = (timestamp) => {
-  return moment(`${timestamp}`, `x`).format(`DD MMM YYYY`);
+  return moment(`${timestamp}`, `x`).format(`DD MMMM YYYY`);
 };
 
 export const getProfile = (array) => {

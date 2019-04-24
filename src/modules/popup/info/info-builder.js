@@ -11,7 +11,7 @@ export default (card, container) => {
   const infoContainer = container.querySelector(`.film-details__info-wrap`);
 
   const releaseDateFormat = moment(`${releaseDate}`, `x`)
-    .format(`MMMM D YYYY`);
+    .format(`DD MMMM YYYY`);
 
   const info = new Info({
     audience, title, image, overallRating, rating, originalTitle,

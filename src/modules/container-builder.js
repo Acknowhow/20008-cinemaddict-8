@@ -57,8 +57,7 @@ export default () => {
       buildProfile(profileState, profileContainer);
 
       show.onShow = () => {
-        cardsToDisplayCount = currentTarget !== `all` ?
-          cardsToDisplayCount + 2 : cardsToDisplayCount + 5;
+        cardsToDisplayCount += 5;
 
         cardsToDisplay = getSlicedArray(
             [...cardsTotal], CARDS_SLICE_INDEX, cardsToDisplayCount);
@@ -87,7 +86,7 @@ export default () => {
         const filteredCards = getFilteredCards(loadedCards, currentTarget);
 
         if (typeof filteredCards !== `string`) {
-          cardsToDisplayCount = currentTarget !== `all` ? 2 : 5;
+          // cardsToDisplayCount = currentTarget !== `all` ? 2 : 5;
 
           if (films.classList.contains(`visually-hidden`)) {
             films.classList.remove(`visually-hidden`);
@@ -117,6 +116,9 @@ export default () => {
             statisticFilters.classList.remove(`visually-hidden`);
             films.classList.add(`visually-hidden`);
           }
+
+          console.log(loadedCards);
+
 
           const cardsByGenreCounted = getCardsByGenreCounted(
               getCardsByGenre(loadedCards));
