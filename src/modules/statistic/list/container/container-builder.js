@@ -12,4 +12,4 @@ export default (container, data) => {
   container.appendChild(list.render());
 
   return list;
-}
+};

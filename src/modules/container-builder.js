@@ -91,7 +91,7 @@ export default () => {
       minutesDuration = getMinutesValue(cardsTotalDuration);
 
 
-      const profile = buildProfile(profileState, profileContainer);
+      buildProfile(profileState, profileContainer);
       const statisticContainer = buildStatisticContainer(films);
 
       const filterContainer = buildFilterContainer(
@@ -112,6 +112,7 @@ export default () => {
 
       const statisticChart = buildStatisticChart(statisticContainer.element);
       const statisticCanvas = statisticChart.element.querySelector(`.statistic__chart`);
+      statisticCanvas.style.pointerEvents = `none`;
 
       chart(statisticCanvas, genresArray, genresCountArray);
 
@@ -150,7 +151,7 @@ export default () => {
 
           if (!statisticContainer.element.classList.contains(`visually-hidden`)) {
             statisticContainer.element.classList.add(`visually-hidden`);
-            // statisticFilters.classList.add(`visually-hidden`);
+
           }
           filterContainer.update(getFiltersState(loadedCards, filters));
           filterContainer.updateState(currentTarget);
@@ -174,10 +175,10 @@ export default () => {
             cardsTotalDuration = getCardsTotalDuration(cardsStatisticTotal);
 
             hoursDuration = getHoursValue(cardsTotalDuration);
-            // minutesDuration = getMinutesValue(cardsTotalDuration);
+            minutesDuration = getMinutesValue(cardsTotalDuration);
 
             cardsByGenreCounted = getCardsByGenreCounted(
-              getCardsByGenre(cardsStatisticTotal));
+                getCardsByGenre(cardsStatisticTotal));
 
             let {
               genresArray: genresTargetArray,
@@ -187,7 +188,7 @@ export default () => {
 
             rank.update(cardsTopGenre);
             statisticList.update({totalCount: cardsCount, hoursDuration, minutesDuration,
-              genre: cardsTopGenre})
+              genre: cardsTopGenre});
 
             statisticFilter.updateState(statisticFilterTarget);
             chart(statisticCanvas, genresTargetArray, genresCountTargetArray);

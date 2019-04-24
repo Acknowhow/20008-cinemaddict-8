@@ -6,6 +6,7 @@ import {Sort} from '../../data';
 const body = document.querySelector(`body`);
 const cardsContainer = body.querySelector(
     `.films-list__container--main`);
+
 const topCommentedContainer = body.querySelector(
     `.films-list__container--commented`);
 const topRatedContainer = body.querySelector(
@@ -16,6 +17,7 @@ export default (cards, cardsTotal, Api) => {
   cardsContainer.innerHTML = ``;
   topCommentedContainer.innerHTML = ``;
   topRatedContainer.innerHTML = ``;
+
 
   const topCommentedCards = getDescendingArrayByKey(
       [...cardsTotal], `comments`, Sort.MOST_COMMENTED);

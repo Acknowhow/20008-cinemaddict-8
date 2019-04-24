@@ -117,14 +117,17 @@ export const getCommentDate = (timeStamp) => {
 };
 
 export const getHoursValue = (string) => {
-  if (string.length < 1) {
-    return `0h`;
+  if (typeof string === `number`) {
+    return `0`;
   }
   return [...string].slice(
       0, string.indexOf(`h`)).join(``);
 };
 
 export const getMinutesValue = (string) => {
+  if (typeof string === `number`) {
+    return `0`;
+  }
   const startIndex = string.indexOf(` `) + 1;
   return [...string].slice(
       startIndex, string.indexOf(`m`)).join(``);
@@ -184,7 +187,7 @@ export const getWatchedCardsTotalCount = (array) =>
 
 export const getCardsTotalDuration = (array) => {
   if (array.length < 1) {
-    return `0`;
+    return 0;
   }
   const minutes = array.map((it) => it.duration).reduce((acc, cur) => acc + cur);
 

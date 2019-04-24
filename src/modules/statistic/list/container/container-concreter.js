@@ -45,6 +45,6 @@ export default class Container extends Component {
   }
 
   _getGenreToUpperCase() {
-    return this._genre.charAt(0).toUpperCase() + this._genre.slice(1)
+    return this._genre.charAt(0).toUpperCase() + this._genre.slice(1);
   }
 }

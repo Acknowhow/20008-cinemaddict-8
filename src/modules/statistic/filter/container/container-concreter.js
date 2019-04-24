@@ -47,7 +47,7 @@ export default class Container extends Component {
       const captionFirstLetterToUpperCase =
         caption.charAt(0).toUpperCase() + caption.slice(1);
 
-      captionFirstLetterToUpperCase.replace(/-/g, ' ');
+      captionFirstLetterToUpperCase.replace(/-/g, ` `);
 
       const state = it.state;
 
@@ -55,7 +55,7 @@ export default class Container extends Component {
                      class="statistic__filters-input visually-hidden" 
                      name="statistic-filter" id="statistic-${captionToLowerCase}" value="${captionToLowerCase}" ${state ? `checked` : ``}>
               <label for="statistic-${captionToLowerCase}" class="statistic__filters-label">${captionFirstLetterToUpperCase}</label>`;
-    })
+    });
   }
 
 
