@@ -75,3 +75,31 @@ export const filters = [
     state: `additional`
   },
 ];
+
+export const statisticFilters = [
+  {
+    name: `all-time`,
+    state: `active`,
+  },
+
+  {
+    name: `today`,
+    state: false
+  },
+
+  {
+    name: `week`,
+    state: false
+  },
+
+  {
+    name: `month`,
+    state: false
+  },
+
+  {
+    name: `year`,
+    state: false
+  },
+];
+
