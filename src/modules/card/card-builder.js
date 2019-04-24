@@ -23,22 +23,18 @@ export default (cards, cardsTotal, Api) => {
   const topRatedCards = getDescendingArrayByKey(
       [...cardsTotal], `overallRating`, Sort.MOST_RATED);
 
-  for (let i = 0; i < topRatedCards.length; i++) {
-    const card = topRatedCards[i];
+
+  for (const card of topRatedCards) {
     bridgeCard({
       card, container: topRatedContainer, Api});
   }
 
-  for (let i = 0; i < topCommentedCards.length; i++) {
-    const card = topCommentedCards[i];
-
+  for (const card of topCommentedCards) {
     bridgeCard({
       card, container: topCommentedContainer, Api});
   }
 
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i];
-
+  for (const card of cards) {
     bridgeCard({
       card, container: cardsContainer, Api});
   }
