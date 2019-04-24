@@ -26,7 +26,7 @@ export default class ModelCard {
     this.willWatchDate = data[`user_details`][`watching_date`];
 
     this.isWatched = getWatchedState(
-      Boolean(data[`user_details`][`already_watched`]), this.willWatchDate);
+        Boolean(data[`user_details`][`already_watched`]), this.willWatchDate);
   }
 
   toRAW() {
